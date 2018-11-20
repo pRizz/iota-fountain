@@ -14,7 +14,8 @@
   export default {
     name: 'Fountain',
     props: {
-      txEmitter: EventEmitter
+      txEmitter: EventEmitter,
+      shouldMockFountain: Boolean
     },
     data() {
       return {
@@ -31,6 +32,16 @@
       LiquidFunRenderer.hoveredTxEmitter.on('tx', tx => {
         this.hoveredTx = tx
       })
+
+      setInterval(() => {
+        if(!this.shouldMockFountain) { return }
+
+        const randomNumber = Math.random()
+        this.handleNewTx({
+          hash: '',
+          value: randomNumber < 0.33 ? 1 : randomNumber < 0.66 ? -1 : 0
+        })
+      }, 60)
     },
     methods: {
       handleNewTx(tx) {

@@ -20,6 +20,14 @@
 
         <div class="navbar-end">
 
+          <div class="navbar-item" style="margin-top: 6px;">
+            <div class="field">
+              <b-checkbox style="color: whitesmoke;" v-model="shouldMockFountain">
+                Sprinkles!!
+              </b-checkbox>
+            </div>
+          </div>
+
           <a href="https://github.com/pRizz/iota-fountain" class="navbar-item" target="_blank">
               <span class="icon">
                 <i class="fab fa-github"></i>
@@ -33,7 +41,7 @@
       </div>
     </nav>
 
-    <Fountain :tx-emitter="txEmitter"></Fountain>
+    <Fountain :tx-emitter="txEmitter" :should-mock-fountain="shouldMockFountain"></Fountain>
 
     <footer class="footer is-dark" style="background-color: #111111;">
       <div class="container">
@@ -88,10 +96,12 @@ import Fountain from './components/Fountain'
 import TransactionStreamSubscriber from './lib/TransactionStreamSubscriber'
 import EventEmitter from 'events'
 import tipAddresses from 'prizz-tip-addresses'
+import BCheckbox from "buefy/src/components/checkbox/Checkbox";
 
 export default {
   name: 'app',
   components: {
+    BCheckbox,
     Fountain
   },
   data() {
@@ -100,7 +110,8 @@ export default {
       transactionStreamSubscriber: null,
       txEmitter: new EventEmitter(),
       clientCount: 0,
-      tipAddresses
+      tipAddresses,
+      shouldMockFountain: false
     }
   },
   mounted() {
