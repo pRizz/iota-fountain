@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative">
     <canvas ref="fountain-canvas" v-bind:class="{ clickable: !!hoveredTx }" @click="canvasClicked"></canvas>
-    <span style="position: absolute; left: 0; bottom: 10px; color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
+    <span style="position: absolute; left: 0; bottom: 4px; color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
       {{ hoveredTx && hoveredTx.hash || '' }}
     </span>
   </div>

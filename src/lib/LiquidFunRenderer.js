@@ -288,7 +288,7 @@ function createGlowMaterial({ c, p, colorHex, position }) {
 }
 
 function initCamera() {
-  const camera = new THREE.OrthographicCamera(-6, 6, 5, -1, 1, 10)
+  const camera = new THREE.OrthographicCamera(-6, 6, 5.5, -0.5, 1, 10)
   camera.position.x = 0
   camera.position.y = 2
   camera.position.z = 9

@@ -75,7 +75,7 @@ function createNewTxFountainSpray({ userDataIndex }) {
 
   const particleGroupDef = new b2ParticleGroupDef()
   particleGroupDef.shape = particleGroupShape
-  particleGroupDef.linearVelocity = new b2Vec2(randomAngle(), 5.0 + randomAngle())
+  particleGroupDef.linearVelocity = new b2Vec2(randomAngle(), 6.0 + randomAngle())
   particleGroupDef.color = UserDataIndexConverter.colorFromUserDataIndex({ userDataIndex })
   fountainWaterParticleSystem.CreateParticleGroup(particleGroupDef)
 
