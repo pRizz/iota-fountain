@@ -25,12 +25,6 @@
       LiquidFunRenderer.init({
         _canvas: this.$refs['fountain-canvas']
       }).then(() => {
-        const mockTxEmitter = setInterval(() => {
-          this.handleNewTx({
-            value: Math.random() < 0.1 ? 5 : 0,
-            hash: 'ABD328' + Math.random()
-          })
-        }, 100)
         this.txEmitter.on('tx', (tx) => this.handleNewTx(tx))
       })
 
