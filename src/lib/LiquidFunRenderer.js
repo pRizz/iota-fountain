@@ -56,6 +56,8 @@ let glowMaterial
 let hoveredGlowingSphereMaterial
 let greenGlowingSphereMaterial
 let hoveredGreenGlowingSphereMaterial
+let redGlowingSphereMaterial
+let hoveredRedGlowingSphereMaterial
 let glowingCylinderMaterial
 
 function getHoveredObject() {
@@ -82,8 +84,10 @@ function highlightHoveredObject() {
   if(!hoveredObject.userData.hoveredGlowingSphere) { return removeTxText() }
 
   const particleShouldBeGreen = shouldParticleBeGreen({ particle: hoveredObject })
-  hoveredObject.userData.hoveredGlowingSphere.visible = !particleShouldBeGreen
+  const particleShouldBeRed = shouldParticleBeRed({ particle: hoveredObject })
+  hoveredObject.userData.hoveredGlowingSphere.visible = !particleShouldBeGreen && !particleShouldBeRed
   hoveredObject.userData.greenHoveredGlowingSphere.visible = particleShouldBeGreen
+  hoveredObject.userData.redHoveredGlowingSphere.visible = particleShouldBeRed
 
   displayTxText({ tx: hoveredObject.userData.tx })
 }
@@ -93,6 +97,7 @@ function resetHoveredObjectHighlight() {
   if(!hoveredObject.userData.hoveredGlowingSphere) { return }
   hoveredObject.userData.hoveredGlowingSphere.visible = false
   hoveredObject.userData.greenHoveredGlowingSphere.visible = false
+  hoveredObject.userData.redHoveredGlowingSphere.visible = false
 }
 
 function render() {
@@ -181,15 +186,27 @@ function createGlowingCircles() {
     greenHoveredGlowingSphere.scale.multiplyScalar(1.3)
     greenHoveredGlowingSphere.visible = false
 
+    const redGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(0.075), redGlowingSphereMaterial.clone())
+    redGlowingSphere.scale.multiplyScalar(1.3)
+    redGlowingSphere.visible = false
+
+    const redHoveredGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(0.075), hoveredRedGlowingSphereMaterial.clone())
+    redHoveredGlowingSphere.scale.multiplyScalar(1.3)
+    redHoveredGlowingSphere.visible = false
+
     glowingSphere.add(coreSphere)
     glowingSphere.add(hoveredGlowingSphere)
     glowingSphere.add(greenGlowingSphere)
     glowingSphere.add(greenHoveredGlowingSphere)
+    glowingSphere.add(redGlowingSphere)
+    glowingSphere.add(redHoveredGlowingSphere)
 
     glowingSphere.userData.coreSphere = coreSphere
     glowingSphere.userData.hoveredGlowingSphere = hoveredGlowingSphere
     glowingSphere.userData.greenGlowingSphere = greenGlowingSphere
     glowingSphere.userData.greenHoveredGlowingSphere = greenHoveredGlowingSphere
+    glowingSphere.userData.redGlowingSphere = redGlowingSphere
+    glowingSphere.userData.redHoveredGlowingSphere = redHoveredGlowingSphere
 
     glowingCircles.push(glowingSphere)
 
@@ -232,8 +249,13 @@ function shouldParticleBeGreen({ particle }) {
   return particle.userData.tx.value > 0
 }
 
+function shouldParticleBeRed({ particle }) {
+  return particle.userData.tx.value < 0
+}
+
 function configureParticle({ particle, x, y, z }) {
   particle.userData.greenGlowingSphere.visible = shouldParticleBeGreen({ particle })
+  particle.userData.redGlowingSphere.visible = shouldParticleBeRed({ particle })
   particle.position.set(x, y, z)
 }
 
@@ -309,6 +331,8 @@ async function init({ _canvas }) {
   hoveredGlowingSphereMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33bbff, position: camera.position.clone() })
   greenGlowingSphereMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x00ee22, position: camera.position.clone() })
   hoveredGreenGlowingSphereMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33ffbb, position: camera.position.clone() })
+  redGlowingSphereMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xee2222, position: camera.position.clone() })
+  hoveredRedGlowingSphereMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xffbbbb, position: camera.position.clone() })
   glowingCylinderMaterial = createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xb819ff, position: camera.position.clone() })
 
   const fountainWorld = FountainSimulator.init()
