@@ -6,17 +6,30 @@
 
 // Hack class until user data can be attached to particles or particle groups
 
+const n256pow1 = 256 ** 1
+const n256pow2 = 256 ** 2
+const n256pow3 = 256 ** 3
+
 function userDataIndexFromColor({ r, g, b, a }) {
-  return r * (256 ** 3) + g * (256 ** 2) + b * 256 + a // TODO: optimize
+  return r * n256pow3 + g * n256pow2 + b * n256pow1 + a
 }
 
 function colorFromUserDataIndex({ userDataIndex }) {
-  let r, g, b, a
+  let r, g, b, a, quotient
 
-  r = 0
-  g = 0
-  b = 0
-  a = userDataIndex // FIXME
+  quotient = Math.trunc(userDataIndex / n256pow3)
+  r = quotient
+  userDataIndex -= quotient * n256pow3
+
+  quotient = Math.trunc(userDataIndex / n256pow2)
+  g = quotient
+  userDataIndex -= quotient * n256pow2
+
+  quotient = Math.trunc(userDataIndex / n256pow1)
+  b = quotient
+  userDataIndex -= quotient * n256pow1
+
+  a = userDataIndex
 
   return new b2ParticleColor(r, g, b, a)
 }
