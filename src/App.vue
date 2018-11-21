@@ -8,17 +8,27 @@
         <div class="navbar-item glow code" style="font-size: 1.5rem">
           IOTA Fountain
         </div>
-        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBurger" :class="{ 'is-active': navVisible }" @click="navVisible = !navVisible">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div class="navbar-menu">
+      <div id="navbarBurger" class="navbar-menu" :class="{ 'is-active': navVisible }">
         <div class="navbar-start"></div>
 
         <div class="navbar-end">
+
+          <div class="navbar-item">
+            <svg width="10" height="10">
+              <circle r="5px" cx="5px" cy="5px" :fill="connectionStatusColor"></circle>
+            </svg>
+          </div>
+
+          <div class="navbar-item">
+            {{ usersOnlineText }}
+          </div>
 
           <div class="navbar-item" style="margin-top: 6px;">
             <div class="field">
@@ -111,7 +121,17 @@ export default {
       txEmitter: new EventEmitter(),
       clientCount: 0,
       tipAddresses,
-      shouldMockFountain: false
+      shouldMockFountain: false,
+      connectionStatusColor: 'yellow',
+      navVisible: false
+    }
+  },
+  computed: {
+    usersOnlineText() {
+      if(this.clientCount === 0) {
+        return 'Disconnected'
+      }
+      return `${this.clientCount} Users Online`
     }
   },
   mounted() {
@@ -128,6 +148,10 @@ export default {
 
     this.transactionStreamSubscriber.eventEmitter.on('clientCount', (clientCount) => {
       this.clientCount = clientCount
+    })
+
+    this.transactionStreamSubscriber.eventEmitter.on('state', state => {
+      this.connectionStatusColor = state.color
     })
   }
 }
