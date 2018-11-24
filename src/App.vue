@@ -59,7 +59,7 @@
                 </div>
                 <div class="field">
                   <b-radio v-model="renderStyle" :native-value="Style.shaderStyle" class="dark-text">
-                    Shader
+                    Fancy
                   </b-radio>
                 </div>
               </section>
