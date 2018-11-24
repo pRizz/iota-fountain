@@ -366,7 +366,7 @@ function setStyle({ _style }) {
 
 // FIXME: Hacky
 function isOnMobile() {
-  return navigator.maxTouchPoints && navigator.maxTouchPoints >= 1
+  return navigator.maxTouchPoints >= 1
 }
 
 export default {
