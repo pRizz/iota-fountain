@@ -30,11 +30,40 @@
             {{ usersOnlineText }}
           </div>
 
-          <div class="navbar-item" style="margin-top: 6px;">
-            <div class="field">
-              <b-checkbox style="color: whitesmoke;" v-model="shouldMockFountain">
-                Sprinkles!!
-              </b-checkbox>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              More
+            </a>
+
+            <div class="navbar-dropdown">
+              <div class="navbar-item">
+                <div class="field">
+                  <b-checkbox v-model="shouldMockFountain">
+                    Sprinkles!!
+                  </b-checkbox>
+                </div>
+              </div>
+
+              <hr class="navbar-divider">
+
+              <div class="navbar-item">
+                Rendering Mode
+              </div>
+
+              <section>
+                <div class="field">
+                  <b-radio v-model="renderStyle" :native-value="Style.basicStyle" class="dark-text">
+                    Basic
+                  </b-radio>
+                </div>
+                <div class="field">
+                  <b-radio v-model="renderStyle" :native-value="Style.shaderStyle" class="dark-text">
+                    Shader
+                  </b-radio>
+                </div>
+              </section>
+
             </div>
           </div>
 
@@ -51,7 +80,7 @@
       </div>
     </nav>
 
-    <Fountain :tx-emitter="txEmitter" :should-mock-fountain="shouldMockFountain"></Fountain>
+    <Fountain :tx-emitter="txEmitter" :should-mock-fountain="shouldMockFountain" :renderStyle="renderStyle"></Fountain>
 
     <footer class="footer is-dark" style="background-color: #111111;">
       <div class="container">
@@ -106,11 +135,14 @@ import Fountain from './components/Fountain'
 import TransactionStreamSubscriber from './lib/TransactionStreamSubscriber'
 import EventEmitter from 'events'
 import tipAddresses from 'prizz-tip-addresses'
-import BCheckbox from "buefy/src/components/checkbox/Checkbox";
+import BCheckbox from "buefy/src/components/checkbox/Checkbox"
+import BRadio from "buefy/src/components/radio/Radio"
+import Style from './lib/Style'
 
 export default {
   name: 'app',
   components: {
+    BRadio,
     BCheckbox,
     Fountain
   },
@@ -123,7 +155,9 @@ export default {
       tipAddresses,
       shouldMockFountain: false,
       connectionStatusColor: 'yellow',
-      navVisible: false
+      navVisible: false,
+      renderStyle: Style.shaderStyle,
+      Style
     }
   },
   computed: {
@@ -163,7 +197,6 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
   }
 
   .dark-background {
@@ -181,5 +214,9 @@ export default {
   .glow {
     color: #e9b7ff;
     text-shadow: 0px 0px 3px #b819ff;
+  }
+
+  .dark-text {
+    color: #4a4a4a;
   }
 </style>
