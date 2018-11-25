@@ -13,6 +13,7 @@
     "buefy": "^0.7.1",
     "bulma": "^0.7.2",
     "liquidfun-prizz": "^1.0.0",
+    "mobile-detect": "^1.4.3",
     "prizz-tip-addresses": "^1.0.0",
     "three": "^0.98.0",
     "vue": "^2.5.17"

@@ -13,11 +13,13 @@ import FountainSimulator from './FountainSimulator' // FIXME: consider altering 
 import UserDataIndexConverter from './UserDataIndexConverter'
 import BufferedEmitter from './BufferedEmitter'
 import Style from './Style'
+import MobileDetect from 'mobile-detect'
 
 const THREE = require('three')
 
 const desktopAspectRatio = 16 / 9
 const hoveredTxEmitter = new Emitter()
+const mobileDetect = new MobileDetect(window.navigator.userAgent)
 
 let canvas
 let threeRenderer
@@ -364,9 +366,8 @@ function setStyle({ _style }) {
   init({ _canvas: canvas, _style }).then()
 }
 
-// FIXME: Hacky
 function isOnMobile() {
-  return navigator.maxTouchPoints >= 1
+  return !!mobileDetect.mobile()
 }
 
 export default {
