@@ -61,14 +61,18 @@ function createBasicMaterial({ colorHex }) {
   })
 }
 
+function getCameraPosition() {
+  return new THREE.Vector3(0, 2.5, 9)
+}
+
 const shaderMaterials = {
-  blueGlowingSphereMaterial:         createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x0022ee, position: new THREE.Vector3(0, 2, 9) }),
-  hoveredBlueGlowingSphereMaterial:  createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33bbff, position: new THREE.Vector3(0, 2, 9) }),
-  greenGlowingSphereMaterial:        createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x00ee22, position: new THREE.Vector3(0, 2, 9) }),
-  hoveredGreenGlowingSphereMaterial: createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33ffbb, position: new THREE.Vector3(0, 2, 9) }),
-  redGlowingSphereMaterial:          createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xee2222, position: new THREE.Vector3(0, 2, 9) }),
-  hoveredRedGlowingSphereMaterial:   createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xffbbbb, position: new THREE.Vector3(0, 2, 9) }),
-  glowingCylinderMaterial:           createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xb819ff, position: new THREE.Vector3(0, 2, 9) })
+  blueGlowingSphereMaterial:         createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x0022ee, position: getCameraPosition() }),
+  hoveredBlueGlowingSphereMaterial:  createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33bbff, position: getCameraPosition() }),
+  greenGlowingSphereMaterial:        createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x00ee22, position: getCameraPosition() }),
+  hoveredGreenGlowingSphereMaterial: createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0x33ffbb, position: getCameraPosition() }),
+  redGlowingSphereMaterial:          createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xee2222, position: getCameraPosition() }),
+  hoveredRedGlowingSphereMaterial:   createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xffbbbb, position: getCameraPosition() }),
+  glowingCylinderMaterial:           createGlowMaterial({ c: '0.1', p: '4.5', colorHex: 0xb819ff, position: getCameraPosition() })
 }
 
 const basicMaterials = {

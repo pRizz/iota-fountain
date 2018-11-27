@@ -9,7 +9,7 @@
 
 import Emitter from 'events'
 
-import FountainSimulator from './FountainSimulator' // FIXME: consider altering placement of import; does this belong in the renderer?
+import FountainSimulator from './FountainSimulator'
 import UserDataIndexConverter from './UserDataIndexConverter'
 import BufferedEmitter from './BufferedEmitter'
 import Style from './Style'
@@ -23,14 +23,13 @@ const mobileDetect = new MobileDetect(window.navigator.userAgent)
 
 let canvas
 let threeRenderer
-let renderer
 let camera
 let scene
 let raycaster
 let mouseVector3 = new THREE.Vector3(-1000, -1000, 50)
 let hoveredObject
 let style
-let ranOnceBeforeRender = false
+let startedSimulation = false
 let isRendering = false
 let fountainWorld
 
@@ -75,9 +74,8 @@ function resetHoveredObjectHighlight() {
 }
 
 function render() {
-  renderer.currentVertex = 0
   FountainSimulator.step()
-  renderer.draw()
+  drawParticleSystems()
   threeRenderer.render(scene, camera)
   highlightHoveredObject()
 
@@ -106,14 +104,9 @@ function onWindowResize() {
   threeRenderer.setSize(getCanvasWidth(), getCanvasHeight())
 }
 
-// TODO: Optimize, cleanup legacy code
-function Renderer({ world }) {
-  this.world = world
-}
-
-Renderer.prototype.draw = function() {
-  for (let i = 0, max = this.world.particleSystems.length; i < max; ++i) {
-    drawParticleSystem(this.world.particleSystems[i])
+function drawParticleSystems() {
+  for(let i = 0; i < fountainWorld.particleSystems.length; ++i) {
+    drawParticleSystem(fountainWorld.particleSystems[i])
   }
 }
 
@@ -247,7 +240,7 @@ function configureParticle({ particle, x, y, z }) {
 function initCamera() {
   const camera = new THREE.OrthographicCamera(-6, 6, 5.5, -0.5, 1, 10)
   camera.position.x = 0
-  camera.position.y = 2
+  camera.position.y = 2.5
   camera.position.z = 9
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   return camera
@@ -289,11 +282,9 @@ async function init({ _canvas, _style }) {
 
   glowingCircles.splice(0, glowingCircles.length)
 
-  if(!ranOnceBeforeRender) {
-    ranOnceBeforeRender = true
-
+  if(!startedSimulation) {
+    startedSimulation = true
     fountainWorld = FountainSimulator.init()
-    renderer = new Renderer({ world: fountainWorld })
   }
 
   for (let i = 0, max = fountainWorld.bodies.length; i < max; ++i) {
