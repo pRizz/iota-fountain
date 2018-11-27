@@ -35,17 +35,21 @@ function createFountainLevel({ world, baseY, width }) {
   const bodyDef = new b2BodyDef()
   const ground = world.CreateBody(bodyDef)
   const flatLevelShape = new b2PolygonShape()
-  flatLevelShape.SetAsBoxXYCenterAngle(width, 0.1, new b2Vec2(0, baseY), 0)
+  const halfLevelHeight = 0.1
+  flatLevelShape.SetAsBoxXYCenterAngle(width, halfLevelHeight, new b2Vec2(0, baseY), 0)
+
+  const wingHeight = 0.1
+  const wingWidth = 0.8
 
   const leftWingShape = new b2PolygonShape()
-  leftWingShape.vertices.push(new b2Vec2(-width, baseY - 0.1))
-  leftWingShape.vertices.push(new b2Vec2(-width - 0.8, baseY + 0.3))
-  leftWingShape.vertices.push(new b2Vec2(-width, baseY + 0.1))
+  leftWingShape.vertices.push(new b2Vec2(-width, baseY - halfLevelHeight))
+  leftWingShape.vertices.push(new b2Vec2(-width - wingWidth, baseY + halfLevelHeight + wingHeight))
+  leftWingShape.vertices.push(new b2Vec2(-width, baseY + halfLevelHeight))
 
   const rightWingShape = new b2PolygonShape()
-  rightWingShape.vertices.push(new b2Vec2(width, baseY - 0.1))
-  rightWingShape.vertices.push(new b2Vec2(width + 0.8, baseY + 0.3))
-  rightWingShape.vertices.push(new b2Vec2(width, baseY + 0.1))
+  rightWingShape.vertices.push(new b2Vec2(width, baseY - halfLevelHeight))
+  rightWingShape.vertices.push(new b2Vec2(width + wingWidth, baseY + halfLevelHeight + wingHeight))
+  rightWingShape.vertices.push(new b2Vec2(width, baseY + halfLevelHeight))
 
   ground.CreateFixtureFromShape(flatLevelShape, 0)
   ground.CreateFixtureFromShape(leftWingShape, 0)
