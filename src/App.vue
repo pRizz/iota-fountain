@@ -6,7 +6,7 @@
 
       <div class="navbar-brand">
         <div class="navbar-item glow code" style="font-size: 1.5rem">
-          IOTA Fountain
+          {{appTitle}}
         </div>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBurger" :class="{ 'is-active': navVisible }" @click="navVisible = !navVisible">
           <span aria-hidden="true"></span>
@@ -120,6 +120,9 @@
             NANO: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.NANO }}</code>
           </div>
           <div>
+            BANANO: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.BANANO }}</code>
+          </div>
+          <div>
             Thanks for your support!
           </div>
         </div>
@@ -138,6 +141,7 @@ import tipAddresses from 'prizz-tip-addresses'
 import BCheckbox from "buefy/src/components/checkbox/Checkbox"
 import BRadio from "buefy/src/components/radio/Radio"
 import Style from './lib/Style'
+import BitcoinTransactionSubscriber from './lib/TransactionSubscribers/BitcoinTransactionSubscriber'
 
 export default {
   name: 'app',
@@ -157,7 +161,8 @@ export default {
       connectionStatusColor: 'yellow',
       navVisible: false,
       renderStyle: Style.shaderStyle,
-      Style
+      Style,
+      appTitle: process.env.VUE_APP_BITCOIN_FOUNTAIN ? "Bitcoin Fountain" : "IOTA Fountain"
     }
   },
   computed: {
@@ -169,11 +174,15 @@ export default {
     }
   },
   mounted() {
-    this.transactionStreamSubscriber = TransactionStreamSubscriber({
-      iotaTransactionStreamIP: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_IP,
-      iotaTransactionStreamPort: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_PORT,
-      isIotaTransactionStreamSecured: process.env.VUE_APP_IS_IOTA_TRANSACTION_STREAM_SECURED
-    })
+    if(process.env.VUE_APP_BITCOIN_FOUNTAIN) {
+      this.transactionStreamSubscriber = BitcoinTransactionSubscriber()
+    } else {
+      this.transactionStreamSubscriber = TransactionStreamSubscriber({
+        iotaTransactionStreamIP: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_IP,
+        iotaTransactionStreamPort: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_PORT,
+        isIotaTransactionStreamSecured: process.env.VUE_APP_IS_IOTA_TRANSACTION_STREAM_SECURED
+      })
+    }
 
     this.transactionStreamSubscriber.setTransactionCallback(tx => {
       this.transactions.unshift(tx)

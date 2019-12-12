@@ -1,9 +1,15 @@
 <template>
   <div style="position: relative">
-    <canvas ref="fountain-canvas" v-bind:class="{ clickable: isHoveredTxReal }" @click="canvasClicked"></canvas>
-    <span style="position: absolute; left: 0; bottom: 4px; color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
-      {{ hoveredTx && hoveredTx.hash || '' }}
-    </span>
+    <canvas ref="fountain-canvas"
+            v-bind:class="{ clickable: isHoveredTxReal }"
+            @click="canvasClicked">
+    </canvas>
+    <div style="color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
+      {{ hoveredTxHash }}
+    </div>
+    <div style="color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
+      {{ hoveredTxValue }} {{ hoveredTxValue && hoveredTxValueUnits }}
+    </div>
   </div>
 </template>
 
@@ -33,7 +39,16 @@
         if(!this.hoveredTx) { return false }
         if(this.hoveredTx.hash === '') { return false }
         return true
-      }
+      },
+      hoveredTxHash() {
+        return this.hoveredTx && this.hoveredTx.hash || ''
+      },
+      hoveredTxValue() {
+        return this.hoveredTx && this.hoveredTx.value || ''
+      },
+      hoveredTxValueUnits() {
+        return process.env.VUE_APP_BITCOIN_FOUNTAIN ? "satoshis" : "IOTA"
+      },
     },
     mounted() {
       LiquidFunRenderer.init({
@@ -60,9 +75,16 @@
       handleNewTx(tx) {
         LiquidFunRenderer.createNewTxFountainSpray({ tx })
       },
+      txURL(hash) {
+        if(process.env.VUE_APP_BITCOIN_FOUNTAIN) {
+          return `https://www.blockchain.com/btc/tx/${hash}`
+        } else {
+          return `https://open-iota.prizziota.com/#/search/tx/${hash}`
+        }
+      },
       canvasClicked() {
         if(!this.isHoveredTxReal) { return }
-        window.open(`https://open-iota.prizziota.com/#/search/tx/${this.hoveredTx.hash}`, '_blank')
+        window.open(this.txURL(this.hoveredTx.hash), '_blank')
       }
     }
   }
