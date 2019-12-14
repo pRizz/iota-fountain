@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve-bitcoin": "VUE_APP_BITCOIN_FOUNTAIN=true vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-bitcoin": "VUE_APP_BITCOIN_FOUNTAIN=true vue-cli-service build",
     "lint": "vue-cli-service lint",

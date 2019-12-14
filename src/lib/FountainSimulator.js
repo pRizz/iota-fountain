@@ -118,7 +118,7 @@ function ResetWorld() {
 }
 
 function destroyParticlesOutOfBounds() {
-  for (var i = 0, max = world.particleSystems.length; i < max; i++) {
+  for (let i = 0, max = world.particleSystems.length; i < max; i++) {
     const undergroundShape = new b2PolygonShape()
     undergroundShape.SetAsBoxXYCenterAngle(10000, 100, new b2Vec2(0, -101), 0)
     const transform = new b2Transform()
@@ -139,17 +139,20 @@ function Testbed() {
   createFountain({ world })
 }
 
+function createParticleSystem(world, particleRadius = 0.05) {
+  const fountainWaterParticleSystemDef = new b2ParticleSystemDef()
+  fountainWaterParticleSystemDef.radius = particleRadius
+  fountainWaterParticleSystemDef.dampingStrength = 0.1
+  return world.CreateParticleSystem(fountainWaterParticleSystemDef)
+}
+
 function init() {
   const gravity = new b2Vec2(0, -10)
   world = window.world = new b2World(gravity)
 
   Testbed()
 
-  const fountainWaterParticleSystemDef = new b2ParticleSystemDef()
-  fountainWaterParticleSystemDef.radius = 0.05
-  fountainWaterParticleSystemDef.dampingStrength = 0.1
-
-  fountainWaterParticleSystem = world.CreateParticleSystem(fountainWaterParticleSystemDef)
+  fountainWaterParticleSystem = createParticleSystem(world)
 
   return world
 }

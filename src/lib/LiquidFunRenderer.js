@@ -105,8 +105,30 @@ function onWindowResize() {
 }
 
 function drawParticleSystems() {
-  for(let i = 0; i < fountainWorld.particleSystems.length; ++i) {
-    drawParticleSystem(fountainWorld.particleSystems[i])
+  drawParticles(particlesFromParticleSystems(fountainWorld.particleSystems))
+}
+
+function drawParticles(particles) {
+  while(glowingCircles.length < particles.length) {
+    createGlowingCircles()
+  }
+
+  for (let i = 0; i < glowingCircles.length; ++i) {
+    if(i >= particles.length) {
+      glowingCircles[i].visible = false
+      continue
+    }
+
+    const particle = particles[i]
+    glowingCircles[i].visible = true
+    glowingCircles[i].userData.tx = particle.userData
+
+    configureParticle({
+      particle: glowingCircles[i],
+      x: particle.x,
+      y: particle.y,
+      z: particle.z
+    })
   }
 }
 
@@ -191,35 +213,23 @@ function createGlowingCircles() {
   }
 }
 
-function drawParticleSystem(system) {
-  const particleXYPositions = system.GetPositionBuffer()
-  const particleColorBuffer = system.GetColorBuffer()
-  const maxParticleCoordinates = particleXYPositions.length / 2
-  const transform = new b2Transform()
-  transform.SetIdentity()
-
-  while(glowingCircles.length < maxParticleCoordinates) {
-    createGlowingCircles()
-  }
-
-  for (let i = 0; i < glowingCircles.length; ++i) {
-    if(i >= maxParticleCoordinates) {
-      glowingCircles[i].visible = false
-      continue
+function particlesFromParticleSystems(particleSystems) {
+  const particles = []
+  particleSystems.forEach((system) => {
+    const particleXYPositions = system.GetPositionBuffer()
+    const particleCount = particleXYPositions.length / 2
+    const particleColorBuffer = system.GetColorBuffer()
+    for(let i = 0; i < particleCount; ++i) {
+      const userDataIndex = UserDataIndexConverter.userDataIndexFromColorBuffer({ colorBuffer: particleColorBuffer, index: i })
+      particles.push({
+        x: particleXYPositions[2 * i],
+        y: particleXYPositions[2 * i + 1],
+        z: 0.0001 * i + 0.1,
+        userData: userData[userDataIndex]
+      })
     }
-
-    glowingCircles[i].visible = true
-
-    const userDataIndex = UserDataIndexConverter.userDataIndexFromColorBuffer({ colorBuffer: particleColorBuffer, index: i })
-    glowingCircles[i].userData.tx = userData[userDataIndex]
-
-    configureParticle({
-      particle: glowingCircles[i],
-      x: particleXYPositions[2 * i],
-      y: particleXYPositions[2 * i + 1],
-      z: 0.0001 * i + 0.1
-    })
-  }
+  })
+  return particles
 }
 
 function shouldParticleBeGreen({ particle }) {
