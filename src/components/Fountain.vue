@@ -5,10 +5,10 @@
             @click="canvasClicked">
     </canvas>
     <div style="color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
-      {{ hoveredTxHash }}
+      hash: {{ hoveredTxHash }}
     </div>
     <div style="color: #e9b7ff; width: 100%; text-align: center; font-family: 'Menlo', 'Lucida Grande', Geneva, Helvetica, Arial, sans-serif; text-shadow: 0px 0px 3px #b819ff;">
-      {{ hoveredTxValue }} {{ hoveredTxValue && hoveredTxValueUnits }}
+      value: {{ hoveredTxValue }} {{ hoveredTxValue && hoveredTxValueUnits }}
     </div>
   </div>
 </template>

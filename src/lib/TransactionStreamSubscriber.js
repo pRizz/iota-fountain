@@ -5,6 +5,7 @@
  */
 
 import EventEmitter from 'events'
+import ConnectionStatusEnum from './ConnectionStatusEnum'
 
 let webSocketClient = null
 let iotaTransactionStreamIP, iotaTransactionStreamPort, isIotaTransactionStreamSecured
@@ -12,21 +13,6 @@ let tps = 0
 const tpsInterval = 600 // ms
 let transactionsWithinInterval = 0
 const eventEmitter = new EventEmitter()
-
-const State = {
-  connecting: {
-    color: 'yellow'
-  },
-  connected: {
-    color: 'green'
-  },
-  disconnecting: {
-    color: 'yellow'
-  },
-  disconnected: {
-    color: 'red'
-  }
-}
 
 function getWebSocketURL() {
   const webSocketProtocol = (isIotaTransactionStreamSecured === true || isIotaTransactionStreamSecured === 'true') ? 'wss' : 'ws'
@@ -40,13 +26,13 @@ function makeWebSocket() {
 function tryWebSocketConnection() {
   console.log(`${new Date().toISOString()}: Trying to create a new transaction stream WebSocket`)
 
-  eventEmitter.emit('state', State.connecting)
+  eventEmitter.emit('state', ConnectionStatusEnum.connecting)
 
   webSocketClient = makeWebSocket()
 
   webSocketClient.addEventListener('open', () => {
     console.log(`${new Date().toISOString()}: Opened transaction stream WebSocket`)
-    eventEmitter.emit('state', State.connected)
+    eventEmitter.emit('state', ConnectionStatusEnum.connected)
   })
 
   webSocketClient.addEventListener('message', message => {
@@ -65,14 +51,14 @@ function tryWebSocketConnection() {
 
   webSocketClient.addEventListener('close', function() {
     console.warn(`${new Date().toISOString()}: The transaction stream WebSocket closed`)
-    eventEmitter.emit('state', State.disconnected)
+    eventEmitter.emit('state', ConnectionStatusEnum.disconnected)
     if(this !== webSocketClient) { return }
     setTimeout(tryWebSocketConnection, 3000 + Math.random() * 1000)
   })
 
   webSocketClient.addEventListener('error', (error) => {
     console.warn(`${new Date().toISOString()}: The transaction stream WebSocket got an error: ${error}`)
-    eventEmitter.emit('state', State.disconnecting)
+    eventEmitter.emit('state', ConnectionStatusEnum.disconnecting)
   })
 }
 
@@ -89,7 +75,7 @@ function start() {
 
 function stop() {
   if(!webSocketClient) { return }
-  eventEmitter.emit('state', State.disconnecting)
+  eventEmitter.emit('state', ConnectionStatusEnum.disconnecting)
   const localWebSocketClient = webSocketClient
   webSocketClient = null
   localWebSocketClient.close()

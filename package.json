@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build-bitcoin": "VUE_APP_BITCOIN_FOUNTAIN=true vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "deploy-dist-bitcoin": "aws s3 sync dist s3://www.bitcoin-fountain.com --delete",
+    "deploy-dist-iota": "aws s3 sync dist s3://www.iota-fountain.com --delete"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.0",
@@ -14,7 +17,7 @@
     "bulma": "^0.7.5",
     "liquidfun-prizz": "^1.0.0",
     "mobile-detect": "^1.4.4",
-    "prizz-tip-addresses": "^1.0.1",
+    "prizz-tip-addresses": "^1.0.2",
     "three": "^0.111.0",
     "vue": "^2.6.10"
   },

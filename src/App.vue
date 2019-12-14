@@ -22,14 +22,13 @@
 
           <div class="navbar-item">
             <svg width="10" height="10">
-              <circle r="5px" cx="5px" cy="5px" :fill="connectionStatusColor"></circle>
+              <circle r="5px" cx="5px" cy="5px" :fill="clientState.color"></circle>
             </svg>
           </div>
 
           <div class="navbar-item">
-            {{ usersOnlineText }}
+            {{ clientStateText }}
           </div>
-
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
@@ -88,9 +87,8 @@
         <div class="content has-text-centered">
           <div class="columns" style="color: gray;">
             <div class="column">
-              <h1 class="heading title is-4" style="color: gray;">IOTA Fountain</h1>
-              <h1 class="subtitle is-6" style="color: gray;">A visualizer for an <a target="_blank" href="https://www.npmjs.com/package/iota-transaction-stream"></a> IOTA Transaction Stream that utilizes particle physics to render a fountain. Displays new transactions as they are emitted by an IOTA node.</h1>
-              <h1 class="subtitle is-6" style="color: gray;"><span style="color: #22cc33">Green</span> particles represent positive value transactions; <span style="color: #dd3333">red</span> are negative value transactions; <span style="color: #2233ee">blue</span> have 0 value and contain data or are spam.</h1>
+              <BitcoinFountainDescription v-if="isBitcoinFountain"/>
+              <IOTAFountainDescription v-if="!isBitcoinFountain"/>
             </div>
             <div class="column">
               <p>View source code at
@@ -123,6 +121,9 @@
             BANANO: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.BANANO }}</code>
           </div>
           <div>
+            BTC: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.BTC }}</code>
+          </div>
+          <div>
             Thanks for your support!
           </div>
         </div>
@@ -142,10 +143,15 @@ import BCheckbox from "buefy/src/components/checkbox/Checkbox"
 import BRadio from "buefy/src/components/radio/Radio"
 import Style from './lib/Style'
 import BitcoinTransactionSubscriber from './lib/TransactionSubscribers/BitcoinTransactionSubscriber'
+import BitcoinFountainDescription from './components/BitcoinFountainDescription'
+import IOTAFountainDescription from './components/IOTAFountainDescription'
+import ConnectionStatusEnum from './lib/ConnectionStatusEnum'
 
 export default {
   name: 'app',
   components: {
+    IOTAFountainDescription,
+    BitcoinFountainDescription,
     BRadio,
     BCheckbox,
     Fountain
@@ -158,20 +164,27 @@ export default {
       clientCount: 0,
       tipAddresses,
       shouldMockFountain: false,
-      connectionStatusColor: 'yellow',
+      clientState: ConnectionStatusEnum.disconnected,
       navVisible: false,
       renderStyle: Style.shaderStyle,
       Style,
+      isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
       appTitle: process.env.VUE_APP_BITCOIN_FOUNTAIN ? "Bitcoin Fountain" : "IOTA Fountain"
     }
   },
   computed: {
-    usersOnlineText() {
-      if(this.clientCount === 0) {
-        return 'Disconnected'
+    clientStateText() {
+      if(this.clientCount) {
+        return `${this.clientCount} Users Online`
       }
-      return `${this.clientCount} Users Online`
-    }
+      return this.clientState.displayText
+    },
+    coinName() {
+      if(this.isBitcoinFountain) {
+        return "Bitcoin"
+      }
+      return "IOTA"
+    },
   },
   mounted() {
     if(process.env.VUE_APP_BITCOIN_FOUNTAIN) {
@@ -189,12 +202,12 @@ export default {
       this.txEmitter.emit('tx', tx)
     })
 
-    this.transactionStreamSubscriber.eventEmitter.on('clientCount', (clientCount) => {
-      this.clientCount = clientCount
+    this.transactionStreamSubscriber.eventEmitter.on('state', (clientState) => {
+      this.clientState = clientState
     })
 
-    this.transactionStreamSubscriber.eventEmitter.on('state', state => {
-      this.connectionStatusColor = state.color
+    this.transactionStreamSubscriber.eventEmitter.on('clientCount', (clientCount) => {
+      this.clientCount = clientCount
     })
   }
 }
