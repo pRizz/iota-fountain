@@ -169,7 +169,7 @@ export default {
       renderStyle: Style.shaderStyle,
       Style,
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
-      appTitle: process.env.VUE_APP_BITCOIN_FOUNTAIN ? "Bitcoin Fountain" : "IOTA Fountain"
+      appTitle: process.env.VUE_APP_TITLE
     }
   },
   computed: {
