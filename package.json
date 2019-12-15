@@ -18,9 +18,9 @@
     "bulma": "^0.7.5",
     "liquidfun-prizz": "^1.0.0",
     "mobile-detect": "^1.4.4",
-    "prizz-tip-addresses": "^1.0.2",
+    "prizz-tip-addresses": "^1.0.3",
     "three": "^0.111.0",
-    "vue": "^2.6.10"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.1",
@@ -30,7 +30,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,

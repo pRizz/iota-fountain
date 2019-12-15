@@ -121,6 +121,9 @@
             BANANO: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.BANANO }}</code>
           </div>
           <div>
+            ETH: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.ETH }}</code>
+          </div>
+          <div>
             BTC: <code class="code-color dark-background" style="overflow-wrap: break-word;">{{ tipAddresses.BTC }}</code>
           </div>
           <div>
