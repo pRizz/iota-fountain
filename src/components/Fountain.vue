@@ -40,7 +40,8 @@
     },
     data() {
       return {
-        hoveredTx: null
+        hoveredTx: null,
+        accelerometer: null
       }
     },
     computed: {
@@ -70,6 +71,8 @@
         this.hoveredTx = tx
       })
 
+      this.initAccelerometer().catch()
+
       setInterval(() => {
         if(!this.shouldMockFountain) { return }
 
@@ -90,6 +93,25 @@
       canvasClicked() {
         if(!this.isHoveredTxReal) { return }
         window.open(txURL(this.hoveredTx.hash), '_blank')
+      },
+      async initAccelerometer() {
+        try {
+          const permissionsResult = await navigator.permissions.query({name: "accelerometer"})
+          if(permissionsResult.state === 'denied') {
+            return
+          }
+
+          this.accelerometer = new Accelerometer({
+            frequency: 60,
+            referenceFrame: "screen"
+          })
+          this.accelerometer.addEventListener('reading', () => {
+            this.setGravity(-this.accelerometer.x, -this.accelerometer.y)
+          })
+          this.accelerometer.start()
+        } catch(error) {
+          console.error(error)
+        }
       }
     }
   }
