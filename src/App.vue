@@ -78,8 +78,17 @@
       </div>
       </div>
     </nav>
+<!--    <div style="font-size: 40px; color: white">-->
+<!--      Accelerometer: {{acc}} {{acc.x}} {{acc.y}}-->
+<!--    </div>-->
 
     <Fountain :tx-emitter="txEmitter" :should-mock-fountain="shouldMockFountain" :renderStyle="renderStyle"></Fountain>
+
+    <b-switch v-model="showTransactionList" size="is-large" style="margin: 20px">
+      Show Transaction List
+    </b-switch>
+
+    <transaction-list v-if="showTransactionList" :transactions="transactions" />
 
     <footer class="footer is-dark" style="background-color: #111111;">
       <div class="container">
@@ -149,10 +158,12 @@ import BitcoinTransactionSubscriber from './lib/TransactionSubscribers/BitcoinTr
 import BitcoinFountainDescription from './components/BitcoinFountainDescription'
 import IOTAFountainDescription from './components/IOTAFountainDescription'
 import ConnectionStatusEnum from './lib/ConnectionStatusEnum'
+import TransactionList from './components/TransactionList'
 
 export default {
   name: 'app',
   components: {
+    TransactionList,
     IOTAFountainDescription,
     BitcoinFountainDescription,
     BRadio,
@@ -172,7 +183,9 @@ export default {
       renderStyle: Style.shaderStyle,
       Style,
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
-      appTitle: process.env.VUE_APP_TITLE
+      appTitle: process.env.VUE_APP_TITLE,
+      showTransactionList: false
+      // acc: new Accelerometer()
     }
   },
   computed: {

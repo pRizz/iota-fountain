@@ -16,6 +16,7 @@
     "@mdi/font": "^3.9.97",
     "buefy": "^0.7.10",
     "bulma": "^0.7.5",
+    "eslint-plugin-only-warn": "^1.0.1",
     "liquidfun-prizz": "^1.0.0",
     "mobile-detect": "^1.4.4",
     "prizz-tip-addresses": "^1.0.3",
@@ -44,7 +45,10 @@
     "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
-    }
+    },
+    "plugins": [
+      "only-warn"
+    ]
   },
   "postcss": {
     "plugins": {

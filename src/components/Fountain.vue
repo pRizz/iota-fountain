@@ -16,6 +16,7 @@
 <script>
   import EventEmitter from 'events'
   import LiquidFunRenderer from '../lib/LiquidFunRenderer'
+  import {txURL} from '../lib/Util'
 
   export default {
     name: 'Fountain',
@@ -75,16 +76,9 @@
       handleNewTx(tx) {
         LiquidFunRenderer.createNewTxFountainSpray({ tx })
       },
-      txURL(hash) {
-        if(process.env.VUE_APP_BITCOIN_FOUNTAIN) {
-          return `https://www.blockchain.com/btc/tx/${hash}`
-        } else {
-          return `https://open-iota.prizziota.com/#/search/tx/${hash}`
-        }
-      },
       canvasClicked() {
         if(!this.isHoveredTxReal) { return }
-        window.open(this.txURL(this.hoveredTx.hash), '_blank')
+        window.open(txURL(this.hoveredTx.hash), '_blank')
       }
     }
   }
