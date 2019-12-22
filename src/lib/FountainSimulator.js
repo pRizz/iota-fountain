@@ -157,8 +157,14 @@ function init() {
   return world
 }
 
+function setGravity(x, y) {
+  if(!world) {return}
+  world.SetGravity(new b2Vec2(x, y))
+}
+
 export default {
   init,
   step,
-  createNewTxFountainSpray
+  createNewTxFountainSpray,
+  setGravity
 }

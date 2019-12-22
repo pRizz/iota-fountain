@@ -36,10 +36,19 @@
             </a>
 
             <div class="navbar-dropdown">
+
               <div class="navbar-item">
                 <div class="field">
                   <b-checkbox v-model="shouldMockFountain">
                     Sprinkles!!
+                  </b-checkbox>
+                </div>
+              </div>
+
+              <div class="navbar-item">
+                <div class="field">
+                  <b-checkbox v-model="useMoonGravity">
+                    Moon Gravity
                   </b-checkbox>
                 </div>
               </div>
@@ -82,7 +91,11 @@
 <!--      Accelerometer: {{acc}} {{acc.x}} {{acc.y}}-->
 <!--    </div>-->
 
-    <Fountain :tx-emitter="txEmitter" :should-mock-fountain="shouldMockFountain" :renderStyle="renderStyle"></Fountain>
+    <Fountain :tx-emitter="txEmitter"
+              :should-mock-fountain="shouldMockFountain"
+              :useMoonGravity="useMoonGravity"
+              :renderStyle="renderStyle"
+    />
 
     <b-switch v-model="showTransactionList" size="is-large" style="margin: 20px">
       Show Transaction List
@@ -184,7 +197,8 @@ export default {
       Style,
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
       appTitle: process.env.VUE_APP_TITLE,
-      showTransactionList: false
+      showTransactionList: false,
+      useMoonGravity: false
       // acc: new Accelerometer()
     }
   },

@@ -23,11 +23,19 @@
     props: {
       txEmitter: EventEmitter,
       shouldMockFountain: Boolean,
-      renderStyle: Object
+      renderStyle: Object,
+      useMoonGravity: Boolean
     },
     watch: {
       renderStyle(newStyle) {
         LiquidFunRenderer.setStyle({ _style: newStyle })
+      },
+      useMoonGravity(shouldUseMoonGravity) {
+        if(shouldUseMoonGravity) {
+          this.setGravity(0, -1.62)
+        } else {
+          this.setGravity(0, -9.806)
+        }
       }
     },
     data() {
@@ -75,6 +83,9 @@
     methods: {
       handleNewTx(tx) {
         LiquidFunRenderer.createNewTxFountainSpray({ tx })
+      },
+      setGravity(x, y) {
+        LiquidFunRenderer.setGravity(x, y)
       },
       canvasClicked() {
         if(!this.isHoveredTxReal) { return }

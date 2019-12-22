@@ -371,9 +371,14 @@ function isOnMobile() {
   return !!mobileDetect.mobile()
 }
 
+function setGravity(x, y) {
+  FountainSimulator.setGravity(x, y)
+}
+
 export default {
   init,
   createNewTxFountainSpray,
+  setGravity,
   hoveredTxEmitter,
   setStyle
 }
