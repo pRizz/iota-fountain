@@ -172,6 +172,8 @@ import BitcoinFountainDescription from './components/BitcoinFountainDescription'
 import IOTAFountainDescription from './components/IOTAFountainDescription'
 import ConnectionStatusEnum from './lib/ConnectionStatusEnum'
 import TransactionList from './components/TransactionList'
+import NanoTransactionSubscriber from './lib/TransactionSubscribers/NanoTransactionSubscriber'
+import {initializeTransactionStreamSubscriber} from './Config'
 
 export default {
   name: 'app',
@@ -199,7 +201,6 @@ export default {
       appTitle: process.env.VUE_APP_TITLE,
       showTransactionList: false,
       useMoonGravity: false
-      // acc: new Accelerometer()
     }
   },
   computed: {
@@ -217,15 +218,7 @@ export default {
     },
   },
   mounted() {
-    if(process.env.VUE_APP_BITCOIN_FOUNTAIN) {
-      this.transactionStreamSubscriber = BitcoinTransactionSubscriber()
-    } else {
-      this.transactionStreamSubscriber = TransactionStreamSubscriber({
-        iotaTransactionStreamIP: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_IP,
-        iotaTransactionStreamPort: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_PORT,
-        isIotaTransactionStreamSecured: process.env.VUE_APP_IS_IOTA_TRANSACTION_STREAM_SECURED
-      })
-    }
+    this.transactionStreamSubscriber = initializeTransactionStreamSubscriber()
 
     this.transactionStreamSubscriber.setTransactionCallback(tx => {
       this.transactions.unshift(tx)
