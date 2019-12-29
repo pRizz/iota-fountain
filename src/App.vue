@@ -87,9 +87,6 @@
       </div>
       </div>
     </nav>
-<!--    <div style="font-size: 40px; color: white">-->
-<!--      Accelerometer: {{acc}} {{acc.x}} {{acc.y}}-->
-<!--    </div>-->
 
     <Fountain :tx-emitter="txEmitter"
               :should-mock-fountain="shouldMockFountain"
@@ -97,7 +94,7 @@
               :renderStyle="renderStyle"
     />
 
-    <b-switch v-model="showTransactionList" size="is-large" style="margin: 20px">
+    <b-switch v-model="showTransactionList" size="is-medium" style="margin: 20px">
       Show Transaction List
     </b-switch>
 

@@ -20,7 +20,7 @@
               <div class="title is-5" style="">Transaction hash {{tx.hash}}</div>
               <div style="text-align: center">
                 <b-taglist attached style="">
-                  <b-tag :type="valueType(tx)" style="">{{ tx.value }}</b-tag>
+                  <b-tag :type="valueType(tx)" style="">{{ formattedValue(tx) }}</b-tag>
                 </b-taglist>
               </div>
             <br/>
@@ -36,7 +36,7 @@
 
 <script>
 
-  import {txURL} from '../lib/Util'
+  import {getExplorerURLForHash, getValueUnits} from '../Config'
 
   export default {
     name: 'transaction-list',
@@ -63,11 +63,11 @@
       valueType(tx) {
         return tx.value > 0 ? 'is-success' : 'is-danger'
       },
-      txValueUnits() {
-        return process.env.VUE_APP_BITCOIN_FOUNTAIN ? "satoshis" : "IOTA"
+      formattedValue(tx) {
+        return `${tx.value} ${getValueUnits()}`
       },
       transactionItemClicked(tx) {
-        window.open(txURL(tx.hash), '_blank')
+        window.open(getExplorerURLForHash(tx.hash), '_blank')
       }
     },
     computed: {

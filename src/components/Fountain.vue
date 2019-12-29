@@ -16,7 +16,7 @@
 <script>
   import EventEmitter from 'events'
   import LiquidFunRenderer from '../lib/LiquidFunRenderer'
-  import {txURL} from '../lib/Util'
+  import {getExplorerURLForHash, getValueUnits} from '../Config'
 
   export default {
     name: 'Fountain',
@@ -57,7 +57,7 @@
         return this.hoveredTx && this.hoveredTx.value || ''
       },
       hoveredTxValueUnits() {
-        return process.env.VUE_APP_BITCOIN_FOUNTAIN ? "satoshis" : "IOTA"
+        return getValueUnits()
       },
     },
     mounted() {
@@ -92,7 +92,7 @@
       },
       canvasClicked() {
         if(!this.isHoveredTxReal) { return }
-        window.open(txURL(this.hoveredTx.hash), '_blank')
+        window.open(getExplorerURLForHash(this.hoveredTx.hash), '_blank')
       },
       async initAccelerometer() {
         try {
