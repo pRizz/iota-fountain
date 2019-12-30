@@ -82,6 +82,8 @@ function createNewTxFountainSpray({ userDataIndex }) {
   particleGroupDef.linearVelocity = new b2Vec2(randomAngle(), 6.0 + randomAngle())
   particleGroupDef.color = UserDataIndexConverter.colorFromUserDataIndex({ userDataIndex })
   fountainWaterParticleSystem.CreateParticleGroup(particleGroupDef)
+  fountainWaterParticleSystem.CreateParticleGroup(particleGroupDef)
+  fountainWaterParticleSystem.CreateParticleGroup(particleGroupDef)
 
   // FIXME: uncomment
   // const particleDef = new b2ParticleDef()

@@ -33,6 +33,8 @@ let startedSimulation = false
 let isRendering = false
 let fountainWorld
 
+// try metaball algo for water behavior https://github.com/stemkoski/stemkoski.github.com/blob/f5c7120af8488d04255b3e4492f4fb214d80b6ff/Three.js/Metaballs.html
+
 function getHoveredObject() {
   raycaster.setFromCamera(mouseVector3, camera)
   const intersectedObjects = raycaster.intersectObjects(scene.children)
@@ -42,44 +44,6 @@ function getHoveredObject() {
 
   const closestIntersectedObject = intersectedObjects[0]
   return closestIntersectedObject
-}
-
-function highlightHoveredObject() {
-  const newHoveredObject = getHoveredObject()
-  if(newHoveredObject === hoveredObject) { return }
-
-  resetHoveredObjectHighlight()
-
-  if(!newHoveredObject) { return removeTxText() }
-
-  hoveredObject = newHoveredObject.object
-
-  if(!hoveredObject.userData.blueHoveredGlowingSphere) { return removeTxText() }
-
-  const particleShouldBeGreen = shouldParticleBeGreen({ particle: hoveredObject })
-  const particleShouldBeRed = shouldParticleBeRed({ particle: hoveredObject })
-  hoveredObject.userData.blueHoveredGlowingSphere.visible = !particleShouldBeGreen && !particleShouldBeRed
-  hoveredObject.userData.greenHoveredGlowingSphere.visible = particleShouldBeGreen
-  hoveredObject.userData.redHoveredGlowingSphere.visible = particleShouldBeRed
-
-  displayTxText({ tx: hoveredObject.userData.tx })
-}
-
-function resetHoveredObjectHighlight() {
-  if(!hoveredObject) { return }
-  if(!hoveredObject.userData.blueHoveredGlowingSphere) { return }
-  hoveredObject.userData.blueHoveredGlowingSphere.visible = false
-  hoveredObject.userData.greenHoveredGlowingSphere.visible = false
-  hoveredObject.userData.redHoveredGlowingSphere.visible = false
-}
-
-function render() {
-  FountainSimulator.step()
-  drawParticleSystems()
-  threeRenderer.render(scene, camera)
-  highlightHoveredObject()
-
-  requestAnimationFrame(render)
 }
 
 function getWindowWidth() {
@@ -104,30 +68,67 @@ function onWindowResize() {
   threeRenderer.setSize(getCanvasWidth(), getCanvasHeight())
 }
 
-function drawParticleSystems() {
-  drawParticles(particlesFromParticleSystems(fountainWorld.particleSystems))
+function drawParticleSystems(hoveredObject) {
+  drawParticles(
+    particlesFromParticleSystems(fountainWorld.particleSystems),
+    hoveredObject)
 }
 
-function drawParticles(particles) {
-  while(glowingCircles.length < particles.length) {
-    createGlowingCircles()
+function createBasicMaterial({ colorHex }) {
+  return new THREE.MeshBasicMaterial({
+    color: colorHex,
+    opacity: 1.0
+  })
+}
+
+function createParticleMesh() {
+  const coreSphereMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.008),
+    new THREE.MeshBasicMaterial({ color: 0xf8f8f8 }))
+
+  const parentSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), new THREE.MeshBasicMaterial({
+    transparent: true,
+    colorWrite: false
+  }))
+  parentSphereMesh.scale.multiplyScalar(style.sphereScale)
+
+  const coloredSphereMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(glowingSphereRadius),
+    createBasicMaterial({colorHex: "#ffaa44"}))
+  coloredSphereMesh.scale.multiplyScalar(style.sphereScale)
+
+  parentSphereMesh.add(coreSphereMesh)
+  parentSphereMesh.add(coloredSphereMesh)
+
+  parentSphereMesh.userData.coreSphere = coreSphereMesh
+  parentSphereMesh.userData.coloredSphereMesh = coloredSphereMesh
+
+  return parentSphereMesh
+}
+
+function createParticleMeshes() {
+  for(let i = 0; i < 15; ++i) {
+    const particleMesh = createParticleMesh()
+    particleMeshes.push(particleMesh)
+    scene.add(particleMesh)
+  }
+}
+
+function drawParticles(particleInfos, hoveredObject) {
+  while(particleMeshes.length < particleInfos.length) {
+    createParticleMeshes()
   }
 
-  for (let i = 0; i < glowingCircles.length; ++i) {
-    if(i >= particles.length) {
-      glowingCircles[i].visible = false
+  for (let i = 0; i < particleMeshes.length; ++i) {
+    if(i >= particleInfos.length) {
+      particleMeshes[i].visible = false
       continue
     }
 
-    const particle = particles[i]
-    glowingCircles[i].visible = true
-    glowingCircles[i].userData.tx = particle.userData
-
-    configureParticle({
-      particle: glowingCircles[i],
-      x: particle.x,
-      y: particle.y,
-      z: particle.z
+    configureParticleMesh({
+      particleMesh: particleMeshes[i],
+      particleInfo: particleInfos[i],
+      hoveredObject
     })
   }
 }
@@ -154,97 +155,38 @@ function addPolygonToScene({ polygon, transform, scene }) {
   }
 }
 
-const glowingCircles = []
+const particleMeshes = []
 const glowingSphereRadius = 0.05
 
-function createGlowingCircles() {
-  for(let i = 0; i < 15; ++i) {
-    const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(0.008), new THREE.MeshBasicMaterial({ color: 0xf8f8f8 }))
-
-    const parentSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), new THREE.MeshBasicMaterial({
-      transparent: true,
-      colorWrite: false
-    }))
-    parentSphere.scale.multiplyScalar(style.sphereScale)
-
-    const blueGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getBlueGlowingSphereMaterial())
-    blueGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    blueGlowingSphere.visible = false
-
-    const blueHoveredGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getHoveredBlueGlowingSphereMaterial())
-    blueHoveredGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    blueHoveredGlowingSphere.visible = false
-
-    const greenGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getGreenGlowingSphereMaterial())
-    greenGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    greenGlowingSphere.visible = false
-
-    const greenHoveredGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getHoveredGreenGlowingSphereMaterial())
-    greenHoveredGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    greenHoveredGlowingSphere.visible = false
-
-    const redGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getRedGlowingSphereMaterial())
-    redGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    redGlowingSphere.visible = false
-
-    const redHoveredGlowingSphere = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), style.getHoveredRedGlowingSphereMaterial())
-    redHoveredGlowingSphere.scale.multiplyScalar(style.sphereScale)
-    redHoveredGlowingSphere.visible = false
-
-    parentSphere.add(coreSphere)
-    parentSphere.add(blueGlowingSphere)
-    parentSphere.add(blueHoveredGlowingSphere)
-    parentSphere.add(greenGlowingSphere)
-    parentSphere.add(greenHoveredGlowingSphere)
-    parentSphere.add(redGlowingSphere)
-    parentSphere.add(redHoveredGlowingSphere)
-
-    parentSphere.userData.coreSphere = coreSphere
-    parentSphere.userData.blueGlowingSphere = blueGlowingSphere
-    parentSphere.userData.blueHoveredGlowingSphere = blueHoveredGlowingSphere
-    parentSphere.userData.greenGlowingSphere = greenGlowingSphere
-    parentSphere.userData.greenHoveredGlowingSphere = greenHoveredGlowingSphere
-    parentSphere.userData.redGlowingSphere = redGlowingSphere
-    parentSphere.userData.redHoveredGlowingSphere = redHoveredGlowingSphere
-
-    glowingCircles.push(parentSphere)
-
-    scene.add(parentSphere)
-  }
-}
-
 function particlesFromParticleSystems(particleSystems) {
-  const particles = []
+  const particlesInfo = []
   particleSystems.forEach((system) => {
     const particleXYPositions = system.GetPositionBuffer()
     const particleCount = particleXYPositions.length / 2
     const particleColorBuffer = system.GetColorBuffer()
     for(let i = 0; i < particleCount; ++i) {
       const userDataIndex = UserDataIndexConverter.userDataIndexFromColorBuffer({ colorBuffer: particleColorBuffer, index: i })
-      particles.push({
+      particlesInfo.push({
         x: particleXYPositions[2 * i],
         y: particleXYPositions[2 * i + 1],
         z: 0.0001 * i + 0.1,
-        userData: userData[userDataIndex]
+        ...userData[userDataIndex]
       })
     }
   })
-  return particles
+  return particlesInfo
 }
 
-function shouldParticleBeGreen({ particle }) {
-  return particle.userData.tx.value > 0
-}
-
-function shouldParticleBeRed({ particle }) {
-  return particle.userData.tx.value < 0
-}
-
-function configureParticle({ particle, x, y, z }) {
-  particle.userData.blueGlowingSphere.visible = !shouldParticleBeGreen({ particle }) && !shouldParticleBeRed({ particle })
-  particle.userData.greenGlowingSphere.visible = shouldParticleBeGreen({ particle })
-  particle.userData.redGlowingSphere.visible = shouldParticleBeRed({ particle })
-  particle.position.set(x, y, z)
+function configureParticleMesh({ particleMesh, particleInfo, hoveredObject }) {
+  particleMesh.visible = true
+  particleMesh.position.set(particleInfo.x, particleInfo.y, particleInfo.z)
+  particleMesh.userData.tx = particleInfo.tx
+  const lightness = particleMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+  particleMesh.userData.coloredSphereMesh.material.color.setHSL(
+    particleInfo.color.h,
+    particleInfo.color.s,
+    lightness,
+  )
 }
 
 function initCamera() {
@@ -286,11 +228,14 @@ async function init({ _canvas, _style }) {
   canvas = _canvas
   scene = new THREE.Scene()
   camera = initCamera()
-  raycaster = new THREE.Raycaster(camera.position.clone(), new THREE.Vector3(0, 0, 0), 0, 200)
+  raycaster = new THREE.Raycaster(
+    camera.position.clone(),
+    new THREE.Vector3(0, 0, 0),
+    0, 200)
 
   style = _style || (isOnMobile() ? Style.basicStyle : Style.shaderStyle)
 
-  glowingCircles.splice(0, glowingCircles.length)
+  particleMeshes.splice(0, particleMeshes.length)
 
   if(!startedSimulation) {
     startedSimulation = true
@@ -340,13 +285,20 @@ function calculateMouseVector3({ mouseEvent }) {
 }
 
 function onMouseMove(mouseEvent) {
-  event.preventDefault()
+  mouseEvent.preventDefault()
   calculateMouseVector3({ mouseEvent })
 }
 
 const userData = []
 function nextUserDataIndex({ tx }) {
-  userData.push(tx)
+  userData.push({
+    tx,
+    color: {
+      h: Math.random(),
+      s: 0.3 * Math.random() + 0.7,
+      l: 0.1 * Math.random() + 0.45,
+    },
+  })
   return userData.length - 1
 }
 
@@ -373,6 +325,24 @@ function isOnMobile() {
 
 function setGravity(x, y) {
   FountainSimulator.setGravity(x, y)
+}
+
+function displayHoveredInfo(hoveredObject) {
+  if(!hoveredObject) { return removeTxText() }
+
+  hoveredObject = hoveredObject.object
+
+  displayTxText({ tx: hoveredObject.userData.tx })
+}
+
+function render() {
+  FountainSimulator.step()
+  const newHoveredObject = getHoveredObject()
+  drawParticleSystems(newHoveredObject)
+  threeRenderer.render(scene, camera)
+  displayHoveredInfo(newHoveredObject)
+
+  requestAnimationFrame(render)
 }
 
 export default {
