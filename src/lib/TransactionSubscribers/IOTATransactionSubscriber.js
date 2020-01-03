@@ -5,7 +5,7 @@
  */
 
 import EventEmitter from 'events'
-import ConnectionStatusEnum from './ConnectionStatusEnum'
+import ConnectionStatusEnum from '../ConnectionStatusEnum'
 
 let webSocketClient = null
 let iotaTransactionStreamIP, iotaTransactionStreamPort, isIotaTransactionStreamSecured

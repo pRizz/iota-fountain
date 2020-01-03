@@ -1,6 +1,6 @@
 import BitcoinTransactionSubscriber from './lib/TransactionSubscribers/BitcoinTransactionSubscriber'
 import NanoTransactionSubscriber from './lib/TransactionSubscribers/NanoTransactionSubscriber'
-import TransactionStreamSubscriber from './lib/TransactionStreamSubscriber'
+import IOTATransactionSubscriber from './lib/TransactionSubscribers/IOTATransactionSubscriber'
 
 const coinFlags = new Set([
   "VUE_APP_BITCOIN_FOUNTAIN",
@@ -50,7 +50,7 @@ export function getValueUnits() {
 const transactionStreamInitializers = {
   VUE_APP_BITCOIN_FOUNTAIN: () => BitcoinTransactionSubscriber(),
   VUE_APP_NANO_FOUNTAIN: () => NanoTransactionSubscriber(),
-  VUE_APP_IOTA_FOUNTAIN: () => TransactionStreamSubscriber({
+  VUE_APP_IOTA_FOUNTAIN: () => IOTATransactionSubscriber({
     iotaTransactionStreamIP: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_IP,
     iotaTransactionStreamPort: process.env.VUE_APP_IOTA_TRANSACTION_STREAM_PORT,
     isIotaTransactionStreamSecured: process.env.VUE_APP_IS_IOTA_TRANSACTION_STREAM_SECURED
