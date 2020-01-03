@@ -18,7 +18,7 @@ function getCurrentCoinKey() {
   }
 
   if(existingCoinFlags.size !== 1) {
-    throw `Must supply exactly one of ${JSON.stringify(Object.values(coinFlags))}, in the environment`
+    throw `Must supply exactly one of ${JSON.stringify(coinFlags)}, in the environment`
   }
 
   return existingCoinFlags.values().next().value
@@ -59,4 +59,14 @@ const transactionStreamInitializers = {
 
 export function initializeTransactionStreamSubscriber() {
   return transactionStreamInitializers[getCurrentCoinKey()]()
+}
+
+const appTitles = {
+  VUE_APP_BITCOIN_FOUNTAIN: "Bitcoin Fountain",
+  VUE_APP_NANO_FOUNTAIN: "NANO Fountain",
+  VUE_APP_IOTA_FOUNTAIN: "IOTA Fountain"
+}
+
+export function getAppTitle() {
+  return appTitles[getCurrentCoinKey()]
 }

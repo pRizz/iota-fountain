@@ -84,9 +84,9 @@
           </div>
 
           <a href="https://github.com/pRizz/iota-fountain" class="navbar-item" target="_blank">
-              <span class="icon">
-                <i class="fab fa-github"></i>
-              </span>
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
             <span>&nbsp;GitHub</span>
           </a>
 
@@ -116,7 +116,8 @@
           <div class="columns" style="color: gray;">
             <div class="column">
               <BitcoinFountainDescription v-if="isBitcoinFountain"/>
-              <IOTAFountainDescription v-if="!isBitcoinFountain"/>
+              <IOTAFountainDescription v-if="isIOTAFountain"/>
+              <NANOFountainDescription v-if="isNANOFountain"/>
             </div>
             <div class="column">
               <p>View source code at
@@ -167,23 +168,23 @@
 
 <script>
 import Fountain from './components/Fountain'
-import TransactionStreamSubscriber from './lib/TransactionStreamSubscriber'
 import EventEmitter from 'events'
 import tipAddresses from 'prizz-tip-addresses'
 import BCheckbox from "buefy/src/components/checkbox/Checkbox"
 import BRadio from "buefy/src/components/radio/Radio"
 import Style from './lib/Style'
-import BitcoinTransactionSubscriber from './lib/TransactionSubscribers/BitcoinTransactionSubscriber'
 import BitcoinFountainDescription from './components/BitcoinFountainDescription'
 import IOTAFountainDescription from './components/IOTAFountainDescription'
 import ConnectionStatusEnum from './lib/ConnectionStatusEnum'
 import TransactionList from './components/TransactionList'
-import NanoTransactionSubscriber from './lib/TransactionSubscribers/NanoTransactionSubscriber'
 import {initializeTransactionStreamSubscriber} from './Config'
+import NANOFountainDescription from './components/NANOFountainDescription'
+import {getAppTitle} from './Config'
 
 export default {
   name: 'app',
   components: {
+    NANOFountainDescription,
     TransactionList,
     IOTAFountainDescription,
     BitcoinFountainDescription,
@@ -204,7 +205,9 @@ export default {
       renderStyle: Style.shaderStyle,
       Style,
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
-      appTitle: process.env.VUE_APP_TITLE,
+      isIOTAFountain: !!process.env.VUE_APP_IOTA_FOUNTAIN,
+      isNANOFountain: !!process.env.VUE_APP_NANO_FOUNTAIN,
+      appTitle: getAppTitle(),
       showTransactionList: false,
       useMoonGravity: false,
       showFluidOutline: false,
@@ -216,12 +219,6 @@ export default {
         return `${this.clientCount} Users Online`
       }
       return this.clientState.displayText
-    },
-    coinName() {
-      if(this.isBitcoinFountain) {
-        return "Bitcoin"
-      }
-      return "IOTA"
     },
   },
   mounted() {
