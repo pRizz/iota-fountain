@@ -53,6 +53,14 @@
                 </div>
               </div>
 
+              <div class="navbar-item">
+                <div class="field">
+                  <b-checkbox v-model="showFluidOutline">
+                    Show Fluid Outline
+                  </b-checkbox>
+                </div>
+              </div>
+
               <hr class="navbar-divider">
 
               <div class="navbar-item">
@@ -91,6 +99,7 @@
     <Fountain :tx-emitter="txEmitter"
               :should-mock-fountain="shouldMockFountain"
               :useMoonGravity="useMoonGravity"
+              :showFluidOutline="showFluidOutline"
               :renderStyle="renderStyle"
     />
 
@@ -197,7 +206,8 @@ export default {
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
       appTitle: process.env.VUE_APP_TITLE,
       showTransactionList: false,
-      useMoonGravity: false
+      useMoonGravity: false,
+      showFluidOutline: false,
     }
   },
   computed: {

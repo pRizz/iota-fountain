@@ -24,7 +24,8 @@
       txEmitter: EventEmitter,
       shouldMockFountain: Boolean,
       renderStyle: Object,
-      useMoonGravity: Boolean
+      useMoonGravity: Boolean,
+      showFluidOutline: Boolean,
     },
     watch: {
       renderStyle(newStyle) {
@@ -36,6 +37,9 @@
         } else {
           this.setGravity(0, -9.806)
         }
+      },
+      showFluidOutline(shouldShowFluidOutline) {
+        LiquidFunRenderer.showFluidOutline(shouldShowFluidOutline)
       }
     },
     data() {
