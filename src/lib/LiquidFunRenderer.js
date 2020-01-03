@@ -36,36 +36,36 @@ let fountainWorld
 // from https://github.com/stemkoski/stemkoski.github.com/blob/f5c7120af8488d04255b3e4492f4fb214d80b6ff/Three.js/js/MarchingCubesData.js
 
 THREE.edgeTable = new Int32Array([
-  0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
+  0x0, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
   0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
-  0x190, 0x99 , 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c,
+  0x190, 0x99, 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c,
   0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90,
-  0x230, 0x339, 0x33 , 0x13a, 0x636, 0x73f, 0x435, 0x53c,
+  0x230, 0x339, 0x33, 0x13a, 0x636, 0x73f, 0x435, 0x53c,
   0xa3c, 0xb35, 0x83f, 0x936, 0xe3a, 0xf33, 0xc39, 0xd30,
-  0x3a0, 0x2a9, 0x1a3, 0xaa , 0x7a6, 0x6af, 0x5a5, 0x4ac,
+  0x3a0, 0x2a9, 0x1a3, 0xaa, 0x7a6, 0x6af, 0x5a5, 0x4ac,
   0xbac, 0xaa5, 0x9af, 0x8a6, 0xfaa, 0xea3, 0xda9, 0xca0,
-  0x460, 0x569, 0x663, 0x76a, 0x66 , 0x16f, 0x265, 0x36c,
+  0x460, 0x569, 0x663, 0x76a, 0x66, 0x16f, 0x265, 0x36c,
   0xc6c, 0xd65, 0xe6f, 0xf66, 0x86a, 0x963, 0xa69, 0xb60,
-  0x5f0, 0x4f9, 0x7f3, 0x6fa, 0x1f6, 0xff , 0x3f5, 0x2fc,
+  0x5f0, 0x4f9, 0x7f3, 0x6fa, 0x1f6, 0xff, 0x3f5, 0x2fc,
   0xdfc, 0xcf5, 0xfff, 0xef6, 0x9fa, 0x8f3, 0xbf9, 0xaf0,
-  0x650, 0x759, 0x453, 0x55a, 0x256, 0x35f, 0x55 , 0x15c,
+  0x650, 0x759, 0x453, 0x55a, 0x256, 0x35f, 0x55, 0x15c,
   0xe5c, 0xf55, 0xc5f, 0xd56, 0xa5a, 0xb53, 0x859, 0x950,
-  0x7c0, 0x6c9, 0x5c3, 0x4ca, 0x3c6, 0x2cf, 0x1c5, 0xcc ,
+  0x7c0, 0x6c9, 0x5c3, 0x4ca, 0x3c6, 0x2cf, 0x1c5, 0xcc,
   0xfcc, 0xec5, 0xdcf, 0xcc6, 0xbca, 0xac3, 0x9c9, 0x8c0,
   0x8c0, 0x9c9, 0xac3, 0xbca, 0xcc6, 0xdcf, 0xec5, 0xfcc,
-  0xcc , 0x1c5, 0x2cf, 0x3c6, 0x4ca, 0x5c3, 0x6c9, 0x7c0,
+  0xcc, 0x1c5, 0x2cf, 0x3c6, 0x4ca, 0x5c3, 0x6c9, 0x7c0,
   0x950, 0x859, 0xb53, 0xa5a, 0xd56, 0xc5f, 0xf55, 0xe5c,
-  0x15c, 0x55 , 0x35f, 0x256, 0x55a, 0x453, 0x759, 0x650,
+  0x15c, 0x55, 0x35f, 0x256, 0x55a, 0x453, 0x759, 0x650,
   0xaf0, 0xbf9, 0x8f3, 0x9fa, 0xef6, 0xfff, 0xcf5, 0xdfc,
-  0x2fc, 0x3f5, 0xff , 0x1f6, 0x6fa, 0x7f3, 0x4f9, 0x5f0,
+  0x2fc, 0x3f5, 0xff, 0x1f6, 0x6fa, 0x7f3, 0x4f9, 0x5f0,
   0xb60, 0xa69, 0x963, 0x86a, 0xf66, 0xe6f, 0xd65, 0xc6c,
-  0x36c, 0x265, 0x16f, 0x66 , 0x76a, 0x663, 0x569, 0x460,
+  0x36c, 0x265, 0x16f, 0x66, 0x76a, 0x663, 0x569, 0x460,
   0xca0, 0xda9, 0xea3, 0xfaa, 0x8a6, 0x9af, 0xaa5, 0xbac,
-  0x4ac, 0x5a5, 0x6af, 0x7a6, 0xaa , 0x1a3, 0x2a9, 0x3a0,
+  0x4ac, 0x5a5, 0x6af, 0x7a6, 0xaa, 0x1a3, 0x2a9, 0x3a0,
   0xd30, 0xc39, 0xf33, 0xe3a, 0x936, 0x83f, 0xb35, 0xa3c,
-  0x53c, 0x435, 0x73f, 0x636, 0x13a, 0x33 , 0x339, 0x230,
+  0x53c, 0x435, 0x73f, 0x636, 0x13a, 0x33, 0x339, 0x230,
   0xe90, 0xf99, 0xc93, 0xd9a, 0xa96, 0xb9f, 0x895, 0x99c,
-  0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x99 , 0x190,
+  0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x99, 0x190,
   0xf00, 0xe09, 0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c,
   0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x0])
 THREE.triTable = new Int32Array([
@@ -425,75 +425,390 @@ function drawParticles(particleInfos, hoveredObject) {
     })
   }
 
-  // createFluidMesh(particleInfos)
+  createFluidPlane(particleInfos)
 }
 
-let fluidMesh = null
+// x: [x0...x1]
+// returns: [0...1]
+function lerp1d(x0, x1, x) {
+  return (x - x0) / (x1 - x0)
+}
 
-function createFluidMesh(particleInfos) {
+const cellTypeToPolyEdges = {
+  // ..
+  // ..
+  0: [],
 
+  // ..
+  // #.
+  1: ["W", "S"],
 
-  /*
-  *
-  *   const camera = new THREE.OrthographicCamera(-6, 6, 5.5, -0.5, 1, 10)
-  camera.position.x = 0
-  camera.position.y = 2.5
-  camera.position.z = 9
-  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  // ..
+  // .#
+  2: ["E", "S"],
 
-  * */
+  // ..
+  // ##
+  3: ["W", "E"],
 
+  // .#
+  // ..
+  4: ["N", "E"],
 
-  const xMin = -6
-  const xMax = 6
-  const xRange = xMax - xMin
-  const yMin = -5
-  const yMax = 10
-  const yRange = yMax - yMin
-  const zMin = -2
-  const zMax = 2
-  const zRange = zMax - zMin
+  // .#
+  // #.
+  5: ["N", "W", "S", "E"],
 
-  // determines the fidelity of the mesh; the higher, the smoother the mesh
-  const size  = 50 // FIXME
-  const size2 = size*size
-  const size3 = size*size*size
+  // .#
+  // .#
+  6: ["N", "S"],
 
-  const points = []
+  // .#
+  // ##
+  7: ["N", "W"],
 
-  for (let k = 0; k < size; k++)
-    for (let j = 0; j < size; j++)
-      for (let i = 0; i < size; i++)
-      {
-        let x = xMin + xRange * i / (size - 1);
-        let y = yMin + yRange * j / (size - 1);
-        let z = zMin + zRange * k / (size - 1);
-        points.push( new THREE.Vector3(x,y,z) );
+  // #.
+  // ..
+  8: ["N", "W"],
+
+  // #.
+  // #.
+  9: ["N", "S"],
+
+  // #.
+  // .#
+  10: ["N", "E", "S", "W"],
+
+  // #.
+  // ##
+  11: ["N", "E"],
+
+  // ##
+  // ..
+  12: ["E", "W"],
+
+  // ##
+  // #.
+  13: ["E", "S"],
+
+  // ##
+  // .#
+  14: ["S", "W"],
+
+  // ##
+  // ##
+  15: []
+}
+
+function lineFromCoords(a, b, minX, minY, xStep, yStep) {
+  /**
+   * Given coordinate pairs in (row, col) format, draw a line on the canvas.
+   */
+  let x0 = a[1] * xStep + minX
+  let y0 = a[0] * yStep + minY
+  let x1 = b[1] * xStep + minX
+  let y1 = b[0] * yStep + minY
+
+  return {
+    x0, y0, x1, y1
+  }
+}
+
+function linesForCellTypes(cellTypes, samples, threshold, minX, minY, xStep, yStep) {
+  const lines = []
+  for (let i = 0; i < cellTypes.length; i++) {
+    for (let j = 0; j < cellTypes[i].length; j++) {
+      let cellType = cellTypes[i][j]
+      let polyCompassEdges = cellTypeToPolyEdges[cellType]
+
+      // The samples at the 4 corners of the current cell
+      let NWSample = samples[i][j]
+      let NESample = samples[i][j + 1]
+      let SWSample = samples[i + 1][j]
+      let SESample = samples[i + 1][j + 1]
+
+      // The offset from top or left that the line intersection should be.
+      // iixx
+      let N = (cellType & 4) === (cellType & 8) ? 0.5 : lerp1d(NWSample, NESample, threshold)
+      // xiix
+      let E = (cellType & 2) === (cellType & 4) ? 0.5 : lerp1d(NESample, SESample, threshold)
+      // xxii
+      let S = (cellType & 1) === (cellType & 2) ? 0.5 : lerp1d(SWSample, SESample, threshold)
+      // ixxi
+      let W = (cellType & 1) === (cellType & 8) ? 0.5 : lerp1d(NWSample, SWSample, threshold)
+
+      // mixing indexes with lerps
+      // these should probably all be from [0...1, 0...1]
+      let compassCoords = {
+        "N": [i, j + N],
+        "W": [i + W, j],
+        "E": [i + E, j + 1],
+        "S": [i + 1, j + S],
+      };
+
+      if (polyCompassEdges.length === 2) {
+        lines.push(
+          lineFromCoords(
+            compassCoords[polyCompassEdges[0]],
+            compassCoords[polyCompassEdges[1]],
+            minX,
+            minY,
+            xStep,
+            yStep
+          ))
+      } else if (polyCompassEdges.length === 4) {
+        lines.push(
+          lineFromCoords(
+            compassCoords[polyCompassEdges[0]],
+            compassCoords[polyCompassEdges[1]],
+            minX,
+            minY,
+            xStep,
+            yStep
+          ),
+          lineFromCoords(
+            compassCoords[polyCompassEdges[2]],
+            compassCoords[polyCompassEdges[3]],
+            minX,
+            minY,
+            xStep,
+            yStep
+          ))
       }
-
-  const values = new Array(size3)
-  values.fill(0)
-
-  particleInfos.forEach(particleInfo => addBall(points, values, new THREE.Vector3(
-    particleInfo.x,
-    particleInfo.y,
-    particleInfo.z
-  )))
-
-  const fluidGeometry = marchingCubes(points, values, 0.5)
-  // const colorMaterial =  new THREE.MeshBasicMaterial({color: 0xe9b755})
-  const colorMaterial =  new THREE.MeshLambertMaterial( {color: 0xffffff, side:THREE.DoubleSide} )
-  scene.remove(fluidMesh)
-  fluidMesh = new THREE.Mesh( fluidGeometry, colorMaterial )
-  scene.add(fluidMesh)
+    }
+  }
+  return lines
 }
 
-// from https://github.com/stemkoski/stemkoski.github.com/blob/f5c7120af8488d04255b3e4492f4fb214d80b6ff/Three.js/Metaballs.html#L227
-// add values corresponding to a ball with radius 1 to values array
-function addBall(points, values, center) {
-  for (let i = 0; i < values.length; i++) {
-    let OneMinusD2 = 0.05 - center.distanceToSquared(points[i]) * 10
-    values[i] += Math.exp(-(OneMinusD2 * OneMinusD2));
+/**
+ * Sample an f(x, y) in a 2D grid.
+ */
+function sample(options) {
+  let minX = options.minX;
+  let maxX = options.maxX;
+  let stepX = options.stepX;
+  const xRange = maxX - minX
+
+  let minY = options.minY;
+  let maxY = options.maxY;
+  let stepY = options.stepY;
+  const yRange = maxY - minY
+
+  let fn = options.fn;
+
+  let numRows = Math.ceil(yRange / stepY);
+  let numCols = Math.ceil(xRange / stepX);
+
+  let samples = [];
+
+  for (let row = 0; row <= numRows; row++) {
+    let y = row * stepY + minY
+    samples.push([])
+    for (let col = 0; col <= numCols; col++) {
+      let x = col * stepX + minX
+      samples[row].push(fn(x, y))
+    }
+  }
+
+  return samples
+}
+
+/**
+ * Convert a grid of continuous values to a
+ * grid of booleans.
+ */
+function threshold(grid, value) {
+  let ret = []
+
+  for (let i = 0; i < grid.length; i++) {
+    ret.push([])
+    for (let j = 0; j < grid[i].length; j++) {
+      ret[i].push(grid[i][j] > value)
+    }
+  }
+
+  return ret
+}
+
+function metaball(x, y, circles) {
+  let sum = 0
+  for (let circle of circles) {
+    let dx = x - circle.x
+    let dy = y - circle.y
+
+    let d2 = dx * dx + dy * dy
+    sum += circle.r2 / d2
+  }
+
+  return sum;
+}
+
+/**
+ * Given a nxm grid of booleans, produce an (n-1)x(m-1) grid of square classifications
+ * following the marching squares algorithm here:
+ * http://en.wikipedia.org/wiki/Marching_squares
+ * The input grid used as the values of the corners.
+ *
+ * The output grid is a 2D array of values 0-15
+ */
+function classifyCells(corners) {
+  let ret = []
+
+  for (let i = 0; i < corners.length - 1; i++) {
+    ret.push([])
+    for (let j = 0; j < corners[i].length - 1; j++) {
+      let NW = corners[i][j]
+      let NE = corners[i][j + 1]
+      let SW = corners[i + 1][j]
+      let SE = corners[i + 1][j + 1]
+
+      ret[i].push(
+        (SW << 0) +
+        (SE << 1) +
+        (NE << 2) +
+        (NW << 3)
+      )
+    }
+  }
+
+  return ret
+}
+
+function recalculate(circles, thresholdValue, minX, maxX, stepX, minY, maxY, stepY) {
+  const samples = sample({
+    minX,
+    maxX,
+    stepX,
+    minY,
+    maxY,
+    stepY,
+    fn: (x, y) => {
+      return metaball(x, y, circles)
+    }
+  })
+
+  const thresholdedSamples = threshold(samples, thresholdValue)
+  const cellTypes = classifyCells(thresholdedSamples)
+  return {
+    samples,
+    thresholdedSamples,
+    cellTypes
+  }
+}
+
+function testMarchingSquares() {
+  const circles = [
+    {
+      x: 1, y: 1, r2: 2
+    }
+  ]
+
+  const size = 4 // FIXME
+
+  const xMin = 0
+  const xMax = 5
+  const xRange = xMax - xMin
+  const stepX = xRange / size // 1.25
+  const yMin = 0
+  const yMax = 5
+  const yRange = yMax - yMin
+  const stepY = yRange / size
+
+  const threshold = 1
+
+  const {samples, thresholdedSamples, cellTypes} = recalculate(
+    circles,
+    threshold,
+    xMin,
+    xMax,
+    stepX,
+    yMin,
+    yMax,
+    stepY)
+
+  console.log(`test marching squares`)
+  console.log(samples)
+  console.log(thresholdedSamples)
+  console.log(cellTypes)
+
+  const lines = linesForCellTypes(
+    cellTypes,
+    samples,
+    threshold,
+    xMin,
+    yMin,
+    stepX,
+    stepY
+  )
+
+  for (let line of lines) {
+    console.log(line)
+    const geometry = new THREE.Geometry()
+    geometry.vertices.push(new THREE.Vector3(line.x0, line.y0, 0))
+    geometry.vertices.push(new THREE.Vector3(line.x1, line.y1, 0))
+    const lineMaterial = new THREE.LineBasicMaterial({color: 0x00ff00});
+
+    const lineMesh = new THREE.Line(geometry, lineMaterial);
+    scene.add(lineMesh)
+  }
+  return lines
+}
+
+const fluidPlaneLines = []
+function createFluidPlane(particleInfos) {
+  // determines the fidelity of the mesh; the higher, the smoother the mesh
+  const size = 30
+
+  const xMin = -3
+  const xMax = 3
+  const xRange = xMax - xMin
+  const stepX = xRange / size
+  const yMin = 2
+  const yMax = 5.5
+  const yRange = yMax - yMin
+  const stepY = yRange / size
+
+  const threshold = 20
+
+  const circles = particleInfos.map(particleInfo => {
+    return {
+      x: particleInfo.x,
+      y: particleInfo.y,
+      radius: 0.25,
+      r2: 0.25
+    }
+  })
+  const {samples, _, cellTypes} = recalculate(
+    circles,
+    threshold,
+    xMin,
+    xMax,
+    stepX,
+    yMin,
+    yMax,
+    stepY)
+
+  const lines = linesForCellTypes(
+    cellTypes,
+    samples,
+    threshold,
+    xMin,
+    yMin,
+    stepX,
+    stepY
+  )
+
+  scene.remove(...fluidPlaneLines.splice(0, fluidPlaneLines.length))
+
+  for (let line of lines) {
+    const geometry = new THREE.Geometry()
+    geometry.vertices.push(new THREE.Vector3(line.x0, line.y0, 0))
+    geometry.vertices.push(new THREE.Vector3(line.x1, line.y1, 0))
+    const lineMaterial = new THREE.LineBasicMaterial({color: 0x00ff66,/* doesn't work linewidth: 0.3*/});
+
+    const lineMesh = new THREE.Line(geometry, lineMaterial);
+    fluidPlaneLines.push(lineMesh)
+    scene.add(lineMesh)
   }
 }
 
@@ -560,7 +875,7 @@ function initCamera() {
   const camera = new THREE.OrthographicCamera(-6, 6, 5.5, -0.5, 1, 10)
   camera.position.x = 0
   camera.position.y = 2.5
-  camera.position.z = 9
+  camera.position.z = 5
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   return camera
 }
@@ -591,6 +906,19 @@ function createGlowingCylinderGroup({startV3, endV3}) {
   return cylinderGroup
 }
 
+function getShape() {
+  const shape = new THREE.Shape()
+  shape.setFromPoints([
+    new THREE.Vector2(5, 0),
+    new THREE.Vector2(0, 5),
+    new THREE.Vector2(-5, 2),
+    new THREE.Vector2(2, 2),
+  ])
+  const geometry = new THREE.ShapeGeometry(shape)
+
+  return new THREE.Mesh(geometry, new THREE.MeshPhongMaterial());
+}
+
 async function init({_canvas, _style}) {
   canvas = _canvas
   scene = new THREE.Scene()
@@ -601,8 +929,11 @@ async function init({_canvas, _style}) {
     0, 200)
 
   const light = new THREE.PointLight(0x55aaff);
-  light.position.set(0,0,10);
+  light.position.set(0, 0, 10);
   scene.add(light);
+
+  // scene.add(getShape())
+  // testMarchingSquares()
 
   style = _style || (isOnMobile() ? Style.basicStyle : Style.shaderStyle)
 
