@@ -997,11 +997,12 @@ function onMouseMove(mouseEvent) {
 
 const userData = []
 
+const baseHue = Math.random()
 function nextUserDataIndex({tx}) {
   userData.push({
     tx,
     color: {
-      h: Math.random(),
+      h: baseHue + 0.12 * Math.random(),
       s: 0.3 * Math.random() + 0.7,
       l: 0.1 * Math.random() + 0.45,
     },
