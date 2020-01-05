@@ -48,7 +48,7 @@ const socialConfigs = {
     VUE_APP_TITLE: "BANANO Fountain",
     VUE_APP_URL: "https://www.banano-fountain.com",
     VUE_APP_SOCIAL_IMAGE: "https://www.banano-fountain.com/banano-fountain-reduced.png",
-    VUE_APP_DESCRIPTION: "Watch transactions flow on the BANANO network"
+    VUE_APP_DESCRIPTION: "Watch potassium flow on the BANANO network"
   }
 }
 

@@ -58,8 +58,16 @@
 </head>
 <body>
 <div id="fb-root"></div>
+<% if(process.env.VUE_APP_NANO_FOUNTAIN){ %>
 <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0&appId=589360101608760&autoLogAppEvents=1"></script>
+<% } %>
+
+<% if(process.env.VUE_APP_BANANO_FOUNTAIN){ %>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0&appId=844326412698594&autoLogAppEvents=1"></script>
+<% } %>
+
 <noscript>
   <strong>We're sorry but <%= VUE_APP_TITLE %> doesn't work properly without JavaScript enabled. Please enable it to
     continue.</strong>
