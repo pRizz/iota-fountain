@@ -68,16 +68,18 @@ async function loadBananoGroup() {
   }))
 }
 
-
-function getHoveredObject() {
+function getHoveredObjects() {
   raycaster.setFromCamera(mouseVector3, camera)
-  const intersectedObjects = raycaster.intersectObjects(scene.children)
+  let intersectedObjects = raycaster.intersectObjects(scene.children)
   if (intersectedObjects.length === 0) {
-    return null
+    const childrensChildren = scene.children.map((child) => child.children).flat()
+    intersectedObjects = raycaster.intersectObjects(childrensChildren)
+    if (intersectedObjects.length === 0) {
+      return null
+    }
   }
 
-  const closestIntersectedObject = intersectedObjects[0]
-  return closestIntersectedObject
+  return intersectedObjects
 }
 
 function getWindowWidth() {
@@ -102,10 +104,10 @@ function onWindowResize() {
   threeRenderer.setSize(getCanvasWidth(), getCanvasHeight())
 }
 
-function drawParticleSystems(hoveredObject) {
+function drawParticleSystems(hoveredObjects) {
   drawParticles(
     particlesFromParticleSystems(fountainWorld.particleSystems),
-    hoveredObject)
+    hoveredObjects)
 }
 
 function createBasicMaterial({colorHex}) {
@@ -115,14 +117,25 @@ function createBasicMaterial({colorHex}) {
   })
 }
 
-function setColorOfBananoGroup(bananoGroup, particleInfo) {
+function setColorOfBananoGroup(bananoGroup, particleInfo, hoveredObjects) {
   bananoGroup.children.forEach((mesh) => {
-    const lightness = bananoGroup === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
-    mesh.material && mesh.material.color.setHSL(
-      particleInfo.color.h,
-      particleInfo.color.s,
-      lightness,
-    )
+    if (!hoveredObjects) {
+      const lightness = particleInfo.color.l
+      mesh.material && mesh.material.color.setHSL(
+        particleInfo.color.h,
+        particleInfo.color.s,
+        lightness,
+      )
+      return
+    }
+    for (let hoveredObject of hoveredObjects) {
+      const lightness = mesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+      mesh.material && mesh.material.color.setHSL(
+        particleInfo.color.h,
+        particleInfo.color.s,
+        lightness,
+      )
+    }
   })
 }
 
@@ -131,9 +144,9 @@ function createParticleMesh() {
   // return createBananoImage({X: 0, y: 0})
 
   const coreSphereMesh = createBananoImage({x: 0, y: 0})
-    // new THREE.Mesh(
-    // new THREE.SphereGeometry(0.008),
-    // new THREE.MeshBasicMaterial({color: 0xf8f8f8}))
+  // new THREE.Mesh(
+  // new THREE.SphereGeometry(0.008),
+  // new THREE.MeshBasicMaterial({color: 0xf8f8f8}))
 
   const parentSphereMesh = createBananoImage({x: 0, y: 0}) //new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), new THREE.MeshBasicMaterial({
   //   transparent: true,
@@ -161,13 +174,13 @@ function createParticleMesh() {
 
   const isBanano = true // FIXME
   parentSphereMesh.userData.setColor = isBanano ?
-    (particleInfo, hoveredObject) => {
-    console.log('setting material color')
-      setColorOfBananoGroup(parentSphereMesh, particleInfo)
-      setColorOfBananoGroup(coreSphereMesh, particleInfo)
-      setColorOfBananoGroup(coloredSphereMesh, particleInfo)
-  } : (particleInfo, hoveredObject) => {
-      const lightness = coloredSphereMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+    (particleInfo, hoveredObjects) => {
+      setColorOfBananoGroup(parentSphereMesh, particleInfo, hoveredObjects)
+      setColorOfBananoGroup(coreSphereMesh, particleInfo, hoveredObjects)
+      setColorOfBananoGroup(coloredSphereMesh, particleInfo, hoveredObjects)
+    } : (particleInfo, hoveredObjects) => {
+      // FIXME
+      const lightness = coloredSphereMesh === (hoveredObjects && hoveredObjects.object) ? 0.8 : particleInfo.color.l
       coloredSphereMesh.material.color.setHSL(
         particleInfo.color.h,
         particleInfo.color.s,
@@ -175,7 +188,19 @@ function createParticleMesh() {
       )
     }
 
+  parentSphereMesh.userData.setTX = (tx) => {
+    setTXOfBananoGroup(parentSphereMesh, tx)
+    setTXOfBananoGroup(coloredSphereMesh, tx)
+    setTXOfBananoGroup(coreSphereMesh, tx)
+  }
+
   return parentSphereMesh
+}
+
+function setTXOfBananoGroup(bananoGroup, tx) {
+  bananoGroup.children.forEach((mesh) => {
+    mesh.userData.tx = tx
+  })
 }
 
 function createParticleMeshes() {
@@ -187,13 +212,13 @@ function createParticleMeshes() {
 }
 
 function createBananoImage({x, y}) {
-  if(!bananoGroup) {
+  if (!bananoGroup) {
     return null
   }
   let _bananoGroup = bananoGroup.clone(true)
   _bananoGroup.position.x = x
   _bananoGroup.position.y = y
-  for(let child of bananoGroup.children) {
+  for (let child of bananoGroup.children) {
     child.material = new THREE.MeshBasicMaterial({
       color: new THREE.Color().setStyle("#FBDD11"),
     })
@@ -201,7 +226,7 @@ function createBananoImage({x, y}) {
   return _bananoGroup
 }
 
-function drawParticles(particleInfos, hoveredObject) {
+function drawParticles(particleInfos, hoveredObjects) {
   while (particleMeshes.length < particleInfos.length) {
     createParticleMeshes()
   }
@@ -215,7 +240,7 @@ function drawParticles(particleInfos, hoveredObject) {
     configureParticleMesh({
       particleMesh: particleMeshes[i],
       particleInfo: particleInfos[i],
-      hoveredObject
+      hoveredObjects
     })
   }
 
@@ -682,7 +707,7 @@ function spinRadPerFrame(rotPerSec) {
   return Math.PI * rotPerSec / 30
 }
 
-function configureParticleMesh({particleMesh, particleInfo, hoveredObject}) {
+function configureParticleMesh({particleMesh, particleInfo, hoveredObjects}) {
   particleMesh.visible = true
   particleMesh.position.set(particleInfo.x, particleInfo.y, particleInfo.z)
 
@@ -692,14 +717,12 @@ function configureParticleMesh({particleMesh, particleInfo, hoveredObject}) {
   const fastRate = spinRadPerFrame(Math.random() * 5 + 1)
   const slowRate = spinRadPerFrame(Math.random())
 
-  console.log(`should be 1`, spinRadFromTime(fastRate, slowRate, 0, 1))
-  console.log(`should be 0.5`, spinRadFromTime(fastRate, slowRate, 10, 1))
-
   const rotation = spinRadFromTime(fastRate, slowRate, elapsedTime, directionMultiplier)
   particleMesh.rotateZ(rotation)
   particleMesh.userData.tx = particleInfo.tx
   // TODO set color from a setColor userData method that each mesh must implement
-  particleMesh.userData.setColor(particleInfo, hoveredObject)
+  particleMesh.userData.setColor(particleInfo, hoveredObjects)
+  particleMesh.userData.setTX(particleInfo.tx)
   // const lightness = particleMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
   // particleMesh.userData.coloredSphereMesh.material.color.setHSL(
   //   particleInfo.color.h,
@@ -876,31 +899,42 @@ function setGravity(x, y) {
   FountainSimulator.setGravity(x, y)
 }
 
-function displayHoveredInfo(hoveredObject) {
-  if (!hoveredObject) {
+// FIXME
+function displayHoveredInfo(hoveredObjects) {
+  if (!hoveredObjects) {
     return removeTxText()
   }
 
-  hoveredObject = hoveredObject.object
+  if (hoveredObjects.object) {
+    hoveredObject = hoveredObject.object
 
-  displayTxText({tx: hoveredObject.userData.tx})
+    displayTxText({tx: hoveredObject.userData.tx})
+    return
+  }
+
+  for (let hoveredObject of hoveredObjects) {
+    hoveredObject = hoveredObject.object
+    if (hoveredObject.userData && hoveredObject.userData.tx) {
+      displayTxText({tx: hoveredObject.userData.tx})
+    }
+  }
 }
 
 function drawCirlce(x, y) {
-  let geometry = new THREE.CircleGeometry( 0.01, 10 );
-  let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-  let circle = new THREE.Mesh( geometry, material );
+  let geometry = new THREE.CircleGeometry(0.01, 10);
+  let material = new THREE.MeshBasicMaterial({color: 0xffff00});
+  let circle = new THREE.Mesh(geometry, material);
   circle.position.x = x
   circle.position.y = y
-  scene.add( circle )
+  scene.add(circle)
 }
 
 function render() {
   FountainSimulator.step()
-  const newHoveredObject = getHoveredObject()
-  drawParticleSystems(newHoveredObject)
+  const newHoveredObjects = getHoveredObjects()
+  drawParticleSystems(newHoveredObjects)
   threeRenderer.render(scene, camera)
-  displayHoveredInfo(newHoveredObject)
+  displayHoveredInfo(newHoveredObjects)
 
   // drawBananos()
   // rotate once every 3 seconds: 1 rot/3 s = 1/3 rot/s
