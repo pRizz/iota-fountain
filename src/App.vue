@@ -118,6 +118,7 @@
               <BitcoinFountainDescription v-if="isBitcoinFountain"/>
               <IOTAFountainDescription v-if="isIOTAFountain"/>
               <NANOFountainDescription v-if="isNANOFountain"/>
+              <BANANOFountainDescription v-if="isBANANOFountain"/>
             </div>
             <div class="column">
               <p>View source code at
@@ -180,10 +181,12 @@ import TransactionList from './components/TransactionList'
 import {initializeTransactionStreamSubscriber} from './Config'
 import NANOFountainDescription from './components/NANOFountainDescription'
 import {getAppTitle} from './Config'
+import BANANOFountainDescription from './components/BANANOFountainDescription'
 
 export default {
   name: 'app',
   components: {
+    BANANOFountainDescription,
     NANOFountainDescription,
     TransactionList,
     IOTAFountainDescription,
@@ -207,6 +210,7 @@ export default {
       isBitcoinFountain: !!process.env.VUE_APP_BITCOIN_FOUNTAIN,
       isIOTAFountain: !!process.env.VUE_APP_IOTA_FOUNTAIN,
       isNANOFountain: !!process.env.VUE_APP_NANO_FOUNTAIN,
+      isBANANOFountain: !!process.env.VUE_APP_BANANO_FOUNTAIN,
       appTitle: getAppTitle(),
       showTransactionList: false,
       useMoonGravity: false,
