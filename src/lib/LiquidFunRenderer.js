@@ -139,31 +139,63 @@ function setColorOfBananoGroup(bananoGroup, particleInfo, hoveredObjects) {
   })
 }
 
+function createBananoParticleMesh() {
+  const parentMesh = createBananoImage({x: 0, y: 0})
+
+  parentMesh.userData.spinParams = {
+    rate: 10 * 2 * Math.PI, // 10 turns/s
+    decay: 0.1,
+    startTime: clock.getElapsedTime(),
+    // [-1 or 1]
+    directionFlag: Math.round(Math.random() * 2) - 1
+  }
+
+  parentMesh.userData.setColor = (particleInfo, hoveredObjects) => {
+    setColorOfBananoGroup(parentMesh, particleInfo, hoveredObjects)
+  }
+
+  parentMesh.userData.setTX = (tx) => {
+    setTXOfBananoGroup(parentMesh, tx)
+  }
+
+  return parentMesh
+}
+
+function setColorOfMesh(mesh, hoveredObject, particleInfo) {
+  const lightness = mesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+  mesh.material.color.setHSL(
+    particleInfo.color.h,
+    particleInfo.color.s,
+    lightness,
+  )
+}
+
 function createParticleMesh() {
+  if (!!process.env.VUE_APP_BANANO_FOUNTAIN) {
+    return createBananoParticleMesh()
+  }
 
-  // return createBananoImage({X: 0, y: 0})
+  const coreSphereMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.008),
+    new THREE.MeshBasicMaterial({color: 0xf8f8f8}))
 
-  const coreSphereMesh = createBananoImage({x: 0, y: 0})
-  // new THREE.Mesh(
-  // new THREE.SphereGeometry(0.008),
-  // new THREE.MeshBasicMaterial({color: 0xf8f8f8}))
+  const parentSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), new THREE.MeshBasicMaterial({
+    transparent: true,
+    colorWrite: false
+  }))
+  parentSphereMesh.scale.multiplyScalar(style.sphereScale)
 
-  const parentSphereMesh = createBananoImage({x: 0, y: 0}) //new THREE.Mesh(new THREE.SphereGeometry(glowingSphereRadius), new THREE.MeshBasicMaterial({
-  //   transparent: true,
-  //   colorWrite: false
-  // }))
-  // parentSphereMesh.scale.multiplyScalar(style.sphereScale)
-
-  const coloredSphereMesh = createBananoImage({x: 0, y: 0}) // new THREE.Mesh(
-  //   new THREE.SphereGeometry(glowingSphereRadius),
-  //   createBasicMaterial({colorHex: "#ffaa44"}))
-  // coloredSphereMesh.scale.multiplyScalar(style.sphereScale)
+  const coloredSphereMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(glowingSphereRadius),
+    createBasicMaterial({colorHex: "#ffaa44"}))
+  coloredSphereMesh.scale.multiplyScalar(style.sphereScale)
 
   parentSphereMesh.add(coreSphereMesh)
   parentSphereMesh.add(coloredSphereMesh)
 
   parentSphereMesh.userData.coreSphere = coreSphereMesh
   parentSphereMesh.userData.coloredSphereMesh = coloredSphereMesh
+
   parentSphereMesh.userData.spinParams = {
     rate: 10 * 2 * Math.PI, // 10 turns/s
     decay: 0.1,
@@ -172,26 +204,22 @@ function createParticleMesh() {
     directionFlag: Math.round(Math.random() * 2) - 1
   }
 
-  const isBanano = true // FIXME
-  parentSphereMesh.userData.setColor = isBanano ?
-    (particleInfo, hoveredObjects) => {
-      setColorOfBananoGroup(parentSphereMesh, particleInfo, hoveredObjects)
-      setColorOfBananoGroup(coreSphereMesh, particleInfo, hoveredObjects)
-      setColorOfBananoGroup(coloredSphereMesh, particleInfo, hoveredObjects)
-    } : (particleInfo, hoveredObjects) => {
-      // FIXME
-      const lightness = coloredSphereMesh === (hoveredObjects && hoveredObjects.object) ? 0.8 : particleInfo.color.l
-      coloredSphereMesh.material.color.setHSL(
-        particleInfo.color.h,
-        particleInfo.color.s,
-        lightness,
-      )
+  parentSphereMesh.userData.setColor = (particleInfo, hoveredObjects) => {
+    if (!hoveredObjects || hoveredObjects.length === 0) {
+      setColorOfMesh(parentSphereMesh, null, particleInfo)
+      setColorOfMesh(coloredSphereMesh, null, particleInfo)
+      return
     }
+    for (let hoveredObject of hoveredObjects) {
+      setColorOfMesh(parentSphereMesh, hoveredObject, particleInfo)
+      setColorOfMesh(coloredSphereMesh, hoveredObject, particleInfo)
+    }
+  }
 
   parentSphereMesh.userData.setTX = (tx) => {
-    setTXOfBananoGroup(parentSphereMesh, tx)
-    setTXOfBananoGroup(coloredSphereMesh, tx)
-    setTXOfBananoGroup(coreSphereMesh, tx)
+    parentSphereMesh.userData.tx = tx
+    coloredSphereMesh.userData.tx = tx
+    coreSphereMesh.userData.tx = tx
   }
 
   return parentSphereMesh
