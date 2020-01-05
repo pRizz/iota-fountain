@@ -115,6 +115,17 @@ function createBasicMaterial({colorHex}) {
   })
 }
 
+function setColorOfBananoGroup(bananoGroup, particleInfo) {
+  bananoGroup.children.forEach((mesh) => {
+    const lightness = bananoGroup === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+    mesh.material && mesh.material.color.setHSL(
+      particleInfo.color.h,
+      particleInfo.color.s,
+      lightness,
+    )
+  })
+}
+
 function createParticleMesh() {
 
   // return createBananoImage({X: 0, y: 0})
@@ -148,6 +159,22 @@ function createParticleMesh() {
     directionFlag: Math.round(Math.random() * 2) - 1
   }
 
+  const isBanano = true // FIXME
+  parentSphereMesh.userData.setColor = isBanano ?
+    (particleInfo, hoveredObject) => {
+    console.log('setting material color')
+      setColorOfBananoGroup(parentSphereMesh, particleInfo)
+      setColorOfBananoGroup(coreSphereMesh, particleInfo)
+      setColorOfBananoGroup(coloredSphereMesh, particleInfo)
+  } : (particleInfo, hoveredObject) => {
+      const lightness = coloredSphereMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+      coloredSphereMesh.material.color.setHSL(
+        particleInfo.color.h,
+        particleInfo.color.s,
+        lightness,
+      )
+    }
+
   return parentSphereMesh
 }
 
@@ -163,10 +190,15 @@ function createBananoImage({x, y}) {
   if(!bananoGroup) {
     return null
   }
-  let _bananoImage = bananoGroup.clone()
-  _bananoImage.position.x = x
-  _bananoImage.position.y = y
-  return _bananoImage
+  let _bananoGroup = bananoGroup.clone(true)
+  _bananoGroup.position.x = x
+  _bananoGroup.position.y = y
+  for(let child of bananoGroup.children) {
+    child.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color().setStyle("#FBDD11"),
+    })
+  }
+  return _bananoGroup
 }
 
 function drawParticles(particleInfos, hoveredObject) {
@@ -667,31 +699,13 @@ function configureParticleMesh({particleMesh, particleInfo, hoveredObject}) {
   particleMesh.rotateZ(rotation)
   particleMesh.userData.tx = particleInfo.tx
   // TODO set color from a setColor userData method that each mesh must implement
-  const lightness = particleMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
+  particleMesh.userData.setColor(particleInfo, hoveredObject)
+  // const lightness = particleMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
   // particleMesh.userData.coloredSphereMesh.material.color.setHSL(
   //   particleInfo.color.h,
   //   particleInfo.color.s,
   //   lightness,
   // )
-
-  if(particleMesh.userData.coloredSphereMesh.material) {
-    particleMesh.userData.coloredSphereMesh.material.color.setHSL(
-      particleInfo.color.h,
-      particleInfo.color.s,
-      lightness,
-    )
-  } else {
-    // particleMesh.userData.coloredSphereMesh
-    // change color of group children
-    particleMesh.userData.coloredSphereMesh.children.forEach((mesh) => {
-      mesh.material.color.setHSL(
-        particleInfo.color.h,
-        particleInfo.color.s,
-        lightness,
-      )
-    })
-  }
-  //#FBDD11
 }
 
 function initCamera() {
