@@ -6,12 +6,15 @@
     "serve": "vue-cli-service serve",
     "serve-bitcoin": "VUE_APP_BITCOIN_FOUNTAIN=true vue-cli-service serve",
     "serve-nano": "VUE_APP_NANO_FOUNTAIN=true vue-cli-service serve",
+    "serve-banano": "VUE_APP_BANANO_FOUNTAIN=true vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-bitcoin": "VUE_APP_BITCOIN_FOUNTAIN=true vue-cli-service build",
     "build-nano": "VUE_APP_NANO_FOUNTAIN=true vue-cli-service build",
+    "build-banano": "VUE_APP_BANANO_FOUNTAIN=true vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy-dist-bitcoin": "aws s3 sync dist s3://www.bitcoin-fountain.com --delete",
     "deploy-dist-nano": "aws s3 sync dist s3://www.nano-fountain.com --delete",
+    "deploy-dist-banano": "aws s3 sync dist s3://www.banano-fountain.com --delete",
     "deploy-dist-iota": "aws s3 sync dist s3://www.iota-fountain.com --delete"
   },
   "dependencies": {

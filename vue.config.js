@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const coinFlags = new Set([
   "VUE_APP_BITCOIN_FOUNTAIN",
   "VUE_APP_NANO_FOUNTAIN",
+  "VUE_APP_BANANO_FOUNTAIN",
   "VUE_APP_IOTA_FOUNTAIN"
 ])
 
@@ -18,7 +19,7 @@ function getCurrentCoinKey() {
   }
 
   if(existingCoinFlags.size !== 1) {
-    throw `Must supply exactly one of ${JSON.stringify(coinFlags)}, in the environment`
+    throw `Must supply exactly one of ${JSON.stringify([...coinFlags.values()])}, in the environment`
   }
 
   return existingCoinFlags.values().next().value
@@ -42,6 +43,12 @@ const socialConfigs = {
     VUE_APP_URL: "https://www.nano-fountain.com",
     VUE_APP_SOCIAL_IMAGE: "https://www.nano-fountain.com/nano-fountain-reduced.png",
     VUE_APP_DESCRIPTION: "Watch transactions flow on the NANO network"
+  },
+  VUE_APP_BANANO_FOUNTAIN: {
+    VUE_APP_TITLE: "BANANO Fountain",
+    VUE_APP_URL: "https://www.banano-fountain.com",
+    VUE_APP_SOCIAL_IMAGE: "https://www.banano-fountain.com/banano-fountain-reduced.png",
+    VUE_APP_DESCRIPTION: "Watch transactions flow on the BANANO network"
   }
 }
 
