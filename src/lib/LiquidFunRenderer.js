@@ -70,13 +70,9 @@ async function loadBananoGroup() {
 
 function getHoveredObjects() {
   raycaster.setFromCamera(mouseVector3, camera)
-  let intersectedObjects = raycaster.intersectObjects(scene.children)
+  let intersectedObjects = raycaster.intersectObjects(scene.children, true)
   if (intersectedObjects.length === 0) {
-    const childrensChildren = scene.children.map((child) => child.children).flat()
-    intersectedObjects = raycaster.intersectObjects(childrensChildren)
-    if (intersectedObjects.length === 0) {
-      return null
-    }
+    return null
   }
 
   return intersectedObjects
@@ -205,13 +201,12 @@ function createParticleMesh() {
   }
 
   parentSphereMesh.userData.setColor = (particleInfo, hoveredObjects) => {
+    setColorOfMesh(coloredSphereMesh, null, particleInfo)
     if (!hoveredObjects || hoveredObjects.length === 0) {
-      setColorOfMesh(parentSphereMesh, null, particleInfo)
-      setColorOfMesh(coloredSphereMesh, null, particleInfo)
       return
     }
+
     for (let hoveredObject of hoveredObjects) {
-      setColorOfMesh(parentSphereMesh, hoveredObject, particleInfo)
       setColorOfMesh(coloredSphereMesh, hoveredObject, particleInfo)
     }
   }
@@ -742,7 +737,7 @@ function configureParticleMesh({particleMesh, particleInfo, hoveredObjects}) {
   const elapsedTime = clock.getElapsedTime() - particleInfo.startTime
   const directionMultiplier = particleMesh.userData.spinParams.directionFlag
 
-  const fastRate = spinRadPerFrame(Math.random() * 5 + 1)
+  const fastRate = spinRadPerFrame(Math.random() * 5 + 1.1)
   const slowRate = spinRadPerFrame(Math.random())
 
   const rotation = spinRadFromTime(fastRate, slowRate, elapsedTime, directionMultiplier)
@@ -751,12 +746,6 @@ function configureParticleMesh({particleMesh, particleInfo, hoveredObjects}) {
   // TODO set color from a setColor userData method that each mesh must implement
   particleMesh.userData.setColor(particleInfo, hoveredObjects)
   particleMesh.userData.setTX(particleInfo.tx)
-  // const lightness = particleMesh === (hoveredObject && hoveredObject.object) ? 0.8 : particleInfo.color.l
-  // particleMesh.userData.coloredSphereMesh.material.color.setHSL(
-  //   particleInfo.color.h,
-  //   particleInfo.color.s,
-  //   lightness,
-  // )
 }
 
 function initCamera() {

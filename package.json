@@ -20,9 +20,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.0",
     "@mdi/font": "^3.9.97",
-    "buefy": "^0.7.10",
-    "bulma": "^0.7.5",
-    "eslint-plugin-only-warn": "^1.0.1",
+    "buefy": "^0.8.9",
+    "bulma": "^0.8.0",
+    "eslint-plugin-only-warn": "^1.0.2",
     "liquidfun-prizz": "^1.0.0",
     "mobile-detect": "^1.4.4",
     "prizz-tip-addresses": "^1.0.3",
